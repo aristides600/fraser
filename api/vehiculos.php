@@ -1,98 +1,87 @@
 <?php
+// vehiculos.php
 require_once 'db.php';
 header('Content-Type: application/json');
 
-// Obtener la solicitud
-$method = $_SERVER['REQUEST_METHOD'];
-$input = json_decode(file_get_contents('php://input'), true);
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS, PUT, DELETE");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-// Operaciones CRUD
+$method = $_SERVER['REQUEST_METHOD'];
+
 switch ($method) {
     case 'GET':
-        // Obtener todos los vehiculos
-        $result = $conn->query("SELECT v.*, m.nombre AS nombre_marca, mo.nombre AS nombre_modelo,
-         c.nombre AS nombre_color, cl.apellido AS cliente_apellido, cl.nombre AS cliente_nombre
-        FROM vehiculos v
-        JOIN marcas m ON v.marca_id = m.id
-        JOIN modelos mo ON v.modelo_id = mo.id
-        JOIN colores c ON v.color_id = c.id
-        JOIN clientes cl ON v.cliente_id = cl.id
-        WHERE v.estado = true
-        ORDER BY v.id ASC");
+        $sql = "SELECT v.*, m.nombre AS marca, c.nombre AS color, mo.nombre AS modelo 
+                FROM vehiculos v 
+                JOIN marcas m ON v.marca_id = m.id 
+                JOIN colores c ON v.color_id = c.id 
+                JOIN modelos mo ON v.modelo_id = mo.id";
+        $result = $conn->query($sql);
 
         $vehiculos = [];
-
-        while ($row = $result->fetch_assoc()) {
+        while($row = $result->fetch_assoc()) {
             $vehiculos[] = $row;
         }
         echo json_encode($vehiculos);
         break;
 
     case 'POST':
+        $data = json_decode(file_get_contents("php://input"), true);
 
-        $usuario_id = $_SESSION['user_id'];
-        // Escapar los valores para prevenir inyección SQL
-        $patente = strtoupper($conn->real_escape_string($input['patente']));
-        $marca_id = $conn->real_escape_string($input['marca_id']);
-        $modelo_id = $conn->real_escape_string($input['modelo_id']);
-        $color_id = $conn->real_escape_string($input['color_id']);
-        $ano = $conn->real_escape_string($input['ano']);
-        $carroceria = strtoupper($conn->real_escape_string($input['carroceria']));
-        $motor = strtoupper($conn->real_escape_string($input['motor']));
-        $cliente_id = $conn->real_escape_string($input['cliente_id']);
-        $estado = 1;
+        $patente = $data['patente'];
+        $marca_id = $data['marca_id'];
+        $color_id = $data['color_id'];
+        $motor = $data['motor'];
+        $modelo_id = $data['modelo_id'];
+        $anio = $data['anio'];
+        $corroceria = $data['corroceria'];
+        $estado = $data['estado'];
 
-        // Insertar el nuevo vehículo en la base de datos
-        $sql = "INSERT INTO vehiculos (ano, carroceria, color_id, marca_id, modelo_id, motor, patente, cliente_id, estado) 
-                    VALUES ('$ano', '$carroceria', '$color_id', '$marca_id', '$modelo_id', '$motor', '$patente', '$cliente_id', '$estado')";
+        $sql = "INSERT INTO vehiculos (patente, marca_id, color_id, motor, modelo_id, anio, corroceria, estado) 
+                VALUES ('$patente', $marca_id, $color_id, '$motor', $modelo_id, $anio, '$corroceria', $estado)";
 
         if ($conn->query($sql) === TRUE) {
-            // Si la inserción fue exitosa, devolver un mensaje de éxito
-            $data['message'] = 'Vehículo agregado correctamente';
+            echo json_encode(["success" => true, "message" => "Vehículo agregado exitosamente"]);
         } else {
-            // Si hubo un error en la inserción, devolver un mensaje de error
-            $data['error'] = 'Error al agregar vehículo: ' . $conn->error;
+            echo json_encode(["success" => false, "message" => "Error: " . $sql . "<br>" . $conn->error]);
         }
-
         break;
 
     case 'PUT':
-        // Obtener el ID del vehículo a actualizar
-        $id = $conn->real_escape_string($input['id']);
+        $data = json_decode(file_get_contents("php://input"), true);
 
-        // Escapar los valores para prevenir inyección SQL
-        $patente = strtoupper($conn->real_escape_string($input['patente']));
-        $marca_id = $conn->real_escape_string($input['marca_id']);
-        $modelo_id = $conn->real_escape_string($input['modelo_id']);
-        $color_id = $conn->real_escape_string($input['color_id']);
-        $cliente_id = $conn->real_escape_string($input['cliente_id']);
+        $id = $data['id'];
+        $patente = $data['patente'];
+        $marca_id = $data['marca_id'];
+        $color_id = $data['color_id'];
+        $motor = $data['motor'];
+        $modelo_id = $data['modelo_id'];
+        $anio = $data['anio'];
+        $corroceria = $data['corroceria'];
+        $estado = $data['estado'];
 
-        $ano = $conn->real_escape_string($input['ano']);
-        $carroceria = strtoupper($conn->real_escape_string($input['carroceria']));
-        $motor = strtoupper($conn->real_escape_string($input['motor']));
+        $sql = "UPDATE vehiculos SET patente='$patente', marca_id=$marca_id, color_id=$color_id, motor='$motor', modelo_id=$modelo_id, anio=$anio, corroceria='$corroceria', estado=$estado WHERE id=$id";
 
-        // Actualizar el vehículo en la base de datos
-        $sql = "UPDATE vehiculos SET patente = '$patente', marca_id = '$marca_id', modelo_id = '$modelo_id', color_id = '$color_id',  cliente_id = '$cliente_id', ano = '$ano', carroceria = '$carroceria', motor = '$motor' WHERE id = '$id'";
         if ($conn->query($sql) === TRUE) {
-            // Si la actualización fue exitosa, devolver un mensaje de éxito
-            $data['message'] = 'Vehículo actualizado correctamente';
+            echo json_encode(["success" => true, "message" => "Vehículo actualizado exitosamente"]);
         } else {
-            // Si hubo un error en la actualización, devolver un mensaje de error
-            $data['error'] = 'Error al actualizar vehículo: ' . $conn->error;
+            echo json_encode(["success" => false, "message" => "Error: " . $sql . "<br>" . $conn->error]);
         }
         break;
-    case 'DELETE':
 
-        $id = $conn->real_escape_string($input['id']);
-        $sql = "UPDATE vehiculos SET estado = false WHERE id = $id";
+    case 'DELETE':
+        $data = json_decode(file_get_contents("php://input"), true);
+        $id = $data['id'];
+
+        $sql = "DELETE FROM vehiculos WHERE id=$id";
 
         if ($conn->query($sql) === TRUE) {
-            echo json_encode(['success' => true, 'message' => 'Vehiculo eliminado con éxito.']);
+            echo json_encode(["success" => true, "message" => "Vehículo eliminado exitosamente"]);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Error al eliminar el vehiculo.']);
+            echo json_encode(["success" => false, "message" => "Error: " . $sql . "<br>" . $conn->error]);
         }
         break;
 }
-
-// Cerrar la conexión
 $conn->close();
+?>

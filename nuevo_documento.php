@@ -78,6 +78,7 @@
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue@3.2.21/dist/vue.global.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
   <script src="./js/nuevo_documento.js"></script>
   <?php include 'footer.php'; ?>
 </body>

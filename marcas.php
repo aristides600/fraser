@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD de Marcas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </head>
 
 <body>
@@ -18,8 +19,6 @@
             </div>
             <button type="submit" class="btn btn-primary">Agregar Marca</button>
         </form>
-
-        <div v-if="errorMessage" class="alert alert-danger mt-3">{{ errorMessage }}</div>
 
         <table class="table mt-4">
             <thead>
@@ -42,12 +41,15 @@
                 </tr>
             </tbody>
         </table>
+        <div class="d-flex justify-content-end mt-4">
+            <a href="index.php" class="btn btn-danger">Salir</a>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@1.3.4/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script src="./js/marcas.js"></script>
-
 </body>
 
 </html>

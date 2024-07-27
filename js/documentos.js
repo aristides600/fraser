@@ -11,7 +11,7 @@ createApp({
             axios.get('api/documentos.php')
                 .then(response => {
                     console.log(response.data); // Verifica los datos recibidos
-                    
+
                     // Agrupamos los documentos por id
                     const documentosAgrupados = response.data.reduce((acc, doc) => {
                         // Si el id ya está en el acumulador, agregamos el color
@@ -22,16 +22,16 @@ createApp({
                         }
                         return acc;
                     }, {});
-                    
+
                     // Convertimos el objeto agrupado en un array
                     this.documentos = Object.values(documentosAgrupados);
-                    
+
                     // Procesamos los datos para incluir el estado y la clase CSS
                     this.documentos = this.documentos.map(doc => {
                         const hoy = new Date();
                         const fechaVencimiento = new Date(doc.fecha_vencimiento);
                         const diferenciaDias = (fechaVencimiento - hoy) / (1000 * 60 * 60 * 24);
-                        
+
                         return {
                             ...doc,
                             diasPorVencer: Math.ceil(diferenciaDias),
@@ -44,7 +44,7 @@ createApp({
                     console.error(error);
                 });
         },
-        
+
         getRowClass(doc) {
             return doc.class || '';
         },
@@ -62,24 +62,27 @@ createApp({
                     id: id,
                     esta: false // Marcamos el documento como inactivo
                 })
-                .then(response => {
-                    if (response.data.success) {
-                        // Actualizamos el estado local del documento
-                        this.documentos = this.documentos.map(doc =>
-                            doc.id === id ? { ...doc, esta: false } : doc
-                        );
-                        alert('Documento desactivado con éxito');
-                    } else {
-                        alert('Error al desactivar el documento');
-                    }
-                })
-                .catch(error => {
-                    console.error(error);
-                    alert('Error al comunicarse con el servidor');
-                });
+                    .then(response => {
+                        if (response.data.success) {
+                            // Actualizamos el estado local del documento
+                            this.documentos = this.documentos.map(doc =>
+                                doc.id === id ? { ...doc, esta: false } : doc
+                            );
+                            alert('Documento desactivado con éxito');
+                        } else {
+                            alert('Error al desactivar el documento');
+                        }
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        alert('Error al comunicarse con el servidor');
+                    });
             }
-        }
-        
+        },
+        nuevoDocumento() {
+            window.location.href = "nuevo_documento.php";
+        },
+
     },
     mounted() {
         this.obtenerDocumentos();

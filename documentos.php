@@ -22,8 +22,14 @@
 </head>
 
 <body>
+
     <div id="app" class="container mt-5">
-        <h1>Documentos</h1>
+        <h1>Gestión de Documentos</h1>
+        <div>
+            <button class="btn btn-sm btn-primary me-2" @click="nuevoDocumento">
+                <i class="bi bi-plus"></i> Nuevo Documento
+            </button>
+        </div>
         <table class="table mt-4">
             <thead>
                 <tr>

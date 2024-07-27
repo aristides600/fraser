@@ -3,89 +3,115 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Vehiculos</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Vehículos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <!-- <link rel="stylesheet" href="./css/estilos.css"> -->
+    <script src="https://unpkg.com/vue@next"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 
 <body>
-    <?php include 'header.php'; ?>
-    <?php
-    require_once 'api/autenticacion.php';
-    ?>
     <div id="app" class="container mt-5">
-        <h1>Vehiculos</h1>
-        <div class="d-flex justify-content-between align-items-center">
-            <div>
-                <button class="btn btn-sm btn-primary" @click="irNuevoVehiculo">
-                    Nuevo Vehiculo
-                </button>
-            </div>
-        </div>
-        <label for="patente" class="form-label me-2">Buscar por patente:</label>
-        <div class="mb-3 d-flex align-items-center">
-            <span class="input-group-text">Buscar...</span>
-            <input type="search" class="form-control me-2" id="patente" v-model="patente" maxlength="7" @input="buscarVehiculo">
-        </div>
-        <!-- <label for="patente" class="form-label me-2">Buscar por patente:</label>
-        <div class="mb-3 d-flex align-items-center">
-            <span class="input-group-text">Buscar...</span>
-            <input type="search" class="form-control me-2" id="patente" v-model="patente" maxlength="7" @keydown.enter="buscarVehiculo">
-        </div> -->
+        <h1 class="mb-4">Gestión de Vehículos</h1>
+        <button @click="showAddModal" class="btn btn-primary mb-3">Agregar Vehículo</button>
 
-
-        <!-- Tabla para mostrar los vehiculos existentes -->
-        <table class="table mt-3">
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th>Patente</th>
                     <th>Marca</th>
                     <th>Modelo</th>
                     <th>Color</th>
-                    <th>Año</th>
-                    <th>Apellido Nombre</th>
-                    <th>Carroceria</th>
                     <th>Motor</th>
+                    <th>Año</th>
+                    <th>Corrocería</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="vehiculo in vehiculos" :key="vehiculo.id">
                     <td>{{ vehiculo.patente }}</td>
-                    <td>{{ vehiculo.nombre_marca }}</td>
-                    <td>{{ vehiculo.nombre_modelo }}</td>
-                    <td>{{ vehiculo.nombre_color }}</td>
-                    <td>{{ vehiculo.ano }}</td>
-                    <td>{{ vehiculo.cliente_apellido }} {{ vehiculo.cliente_nombre }}</td>
-                    <td>{{ vehiculo.carroceria }}</td>
+                    <td>{{ vehiculo.marca }}</td>
+                    <td>{{ vehiculo.modelo }}</td>
+                    <td>{{ vehiculo.color }}</td>
                     <td>{{ vehiculo.motor }}</td>
+                    <td>{{ vehiculo.anio }}</td>
+                    <td>{{ vehiculo.corroceria }}</td>
+                    <td>{{ vehiculo.estado == 1 ? 'Activo' : 'Inactivo' }}</td>
                     <td>
-                        <div class="btn-group" role="group" aria-label="Acciones">
-                            <button class="btn btn-sm btn-outline-primary" @click="irEditarVehiculo(vehiculo.id)">
-                                <i class="bi bi-pencil"></i>
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger" @click="eliminarVehiculo(vehiculo.id)">
-                                <i class="bi bi-trash"></i>
-                            </button>
-                        </div>
+                        <button @click="showEditModal(vehiculo)" class="btn btn-warning">Editar</button>
+                        <button @click="deleteVehiculo(vehiculo.id)" class="btn btn-danger">Eliminar</button>
                     </td>
                 </tr>
             </tbody>
         </table>
-        <div v-if="patente && patente.length > 0 && vehiculos && vehiculos.length == 0">
-            <h2>No se encontró ningún vehiculo</h2>
+
+        <!-- Modal -->
+        <div class="modal fade" id="vehiculoModal" tabindex="-1" aria-labelledby="vehiculoModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="vehiculoModalLabel">{{ isEdit ? 'Editar Vehículo' : 'Agregar Vehículo' }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form @submit.prevent="isEdit ? updateVehiculo() : addVehiculo()">
+                            <div class="mb-3">
+                                <label for="patente" class="form-label">Patente</label>
+                                <input type="text" class="form-control" id="patente" v-model="vehiculo.patente" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="marca_id" class="form-label">Marca</label>
+                                <select class="form-control" id="marca_id" v-model="vehiculo.marca_id" required>
+                                    <option v-for="marca in marcas" :value="marca.id">{{ marca.nombre }}</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="modelo_id" class="form-label">Modelo</label>
+                                <select class="form-control" id="modelo_id" v-model="vehiculo.modelo_id" required>
+                                    <option v-for="modelo in modelos" :value="modelo.id">{{ modelo.nombre }}</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="color_id" class="form-label">Color</label>
+                                <select class="form-control" id="color_id" v-model="vehiculo.color_id" required>
+                                    <option v-for="color in colores" :value="color.id">{{ color.nombre }}</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="motor" class="form-label">Motor</label>
+                                <input type="text" class="form-control" id="motor" v-model="vehiculo.motor" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="anio" class="form-label">Año</label>
+                                <input type="number" class="form-control" id="anio" v-model="vehiculo.anio" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="corroceria" class="form-label">Corrocería</label>
+                                <input type="text" class="form-control" id="corroceria" v-model="vehiculo.corroceria" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="estado" class="form-label">Estado</label>
+                                <select class="form-control" id="estado" v-model="vehiculo.estado" required>
+                                    <option value="1">Activo</option>
+                                    <option value="0">Inactivo</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">{{ isEdit ? 'Actualizar' : 'Agregar' }}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="d-flex justify-content-end mt-4">
-            <a href="index.php" class="btn btn-danger ms-auto">Salir</a>
-        </div>
+
     </div>
-    <?php include 'footer.php'; ?>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.31/dist/vue.global.prod.js"></script>
-    <script src="./js/chequeo_permiso.js"></script>
-    <script src="./js/mensajes.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.3.4/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src="./js/vehiculos.js"></script>
 </body>
 
