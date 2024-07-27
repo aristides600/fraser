@@ -13,8 +13,7 @@ createApp({
     };
   },
   mounted() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get('id');
+    const id = new URLSearchParams(window.location.search).get('id');
     if (id) {
       this.documento.id = id;
       this.obtenerDocumento(id);
@@ -40,8 +39,8 @@ createApp({
           console.error('Error al obtener los tipos de documento:', error);
         });
     },
-    editarDocumento() {
-      axios.post('api/documentos.php', this.documento)
+    grabarDocumento() {
+      axios.put('api/documentos.php', this.documento)
         .then(response => {
           alert('Documento editado correctamente');
         })

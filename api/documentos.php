@@ -49,16 +49,27 @@ switch ($method) {
         break;
 
     case 'PUT':
-        // Editar una marca
+        // Editar un documento
         $id = $conn->real_escape_string($input['id']);
-        $nombre = $conn->real_escape_string(strtoupper($input['nombre']));
-        $conn->query("UPDATE documentos SET nombre = '$nombre' WHERE id = '$id'");
+        $tipo_id = $conn->real_escape_string($input['tipo_id']);
+        $fecha_vencimiento = $conn->real_escape_string($input['fecha_vencimiento']);
+        $observacion = $conn->real_escape_string($input['observacion']);
+        $query = "UPDATE documentos SET tipo_id = '$tipo_id', fecha_vencimiento = '$fecha_vencimiento', observacion = '$observacion' WHERE id = '$id'";
+        if ($conn->query($query) === TRUE) {
+            echo json_encode(['message' => 'Documento editado correctamente']);
+        } else {
+            http_response_code(500);
+            echo json_encode(['message' => 'Error al editar el documento']);
+        }
         break;
-    case 'DELETE':
-        // Eliminar una marca
-        $id = $conn->real_escape_string($input['id']);
-        $conn->query("DELETE FROM documentos WHERE id = '$id'");
+
+        // Otros casos (POST, DELETE, etc.) se pueden agregar aquí
+
+    default:
+        http_response_code(405);
+        echo json_encode(['message' => 'Método no permitido']);
         break;
+
     case 'DELETE':
 
         $id = $conn->real_escape_string($input['id']);

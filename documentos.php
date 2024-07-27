@@ -13,6 +13,7 @@
             background-color: #FFFF99;
             /* Amarillo claro */
         }
+
         .vencido {
             background-color: #FFCCCC;
             /* Rojo claro */
@@ -23,26 +24,6 @@
 <body>
     <div id="app" class="container mt-5">
         <h1>Documentos</h1>
-        <!-- <form @submit.prevent="guardarDocumento">
-            <div class="mb-3">
-                <label for="vehiculo_id" class="form-label">Vehículo ID</label>
-                <input type="number" class="form-control" v-model="documento.vehiculo_id" required>
-            </div>
-            <div class="mb-3">
-                <label for="tipo_id" class="form-label">Tipo ID</label>
-                <input type="number" class="form-control" v-model="documento.tipo_id" required>
-            </div>
-            <div class="mb-3">
-                <label for="fecha_vencimiento" class="form-label">Fecha de Vencimiento</label>
-                <input type="date" class="form-control" v-model="documento.fecha_vencimiento" required>
-            </div>
-            <div class="mb-3">
-                <label for="observacion" class="form-label">Observación</label>
-                <input type="text" class="form-control" v-model="documento.observacion" required>
-            </div>
-            <button type="submit" class="btn btn-primary">{{ editando ? 'Actualizar' : 'Crear' }}</button>
-        </form> -->
-
         <table class="table mt-4">
             <thead>
                 <tr>
@@ -67,16 +48,16 @@
                     <td>{{ formatFecha(doc.fecha_vencimiento) }}</td>
                     <td>{{ doc.observacion }}</td>
                     <td>
-                        <span v-if="porVencer(doc.fecha_vencimiento) > 0">
-                            <i class="bi bi-exclamation-triangle text-warning"></i> Vence en {{ porVencer(doc.fecha_vencimiento) }} días
+                        <span v-if="doc.diasPorVencer > 0">
+                            <i class="bi bi-exclamation-triangle text-warning"></i> Vence en {{ doc.diasPorVencer }} días
                         </span>
-                        <span v-else-if="porVencer(doc.fecha_vencimiento) < 0">
-                            <i class="bi bi-exclamation-triangle text-danger"></i> Vencido hace {{ Math.abs(porVencer(doc.fecha_vencimiento)) }} días
+                        <span v-else-if="doc.diasPorVencer < 0">
+                            <i class="bi bi-exclamation-triangle text-danger"></i> Vencido hace {{ Math.abs(doc.diasPorVencer) }} días
                         </span>
                         <span v-else>No</span>
                     </td>
                     <td>
-                        <button class="btn btn-warning" @click="editarDocumento(doc)"><i class="bi bi-pencil"></i></button>
+                        <button class="btn btn-warning" @click="editarDocumento(doc.id)"><i class="bi bi-pencil"></i></button>
                         <button class="btn btn-danger" @click="eliminarDocumento(doc.id)"><i class="bi bi-trash"></i></button>
                     </td>
                 </tr>

@@ -13,7 +13,7 @@
   <?php include 'header.php'; ?>
   <div id="app" class="container mt-5">
     <h2>Editar Documento</h2>
-    <form @submit.prevent="editarDocumento">
+    <form @submit.prevent="grabarDocumento">
       <div class="mb-3">
         <label for="tipo_id" class="form-label">Tipo de Documento</label>
         <select v-model="documento.tipo_id" class="form-control" id="tipo_id" required>

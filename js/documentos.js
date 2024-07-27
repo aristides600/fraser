@@ -3,85 +3,83 @@ const { createApp } = Vue;
 createApp({
     data() {
         return {
-            documentos: [],
-            documento: {
-                vehiculo_id: null,
-                tipo_id: null,
-                fecha_vencimiento: null,
-                observacion: ''
-            },
-            editando: false,
-            idActual: null,
-            documentosPorVencer: []
+            documentos: []
         };
     },
     methods: {
         obtenerDocumentos() {
             axios.get('api/documentos.php')
                 .then(response => {
-                    this.documentos = response.data.sort((a, b) => new Date(a.fecha_vencimiento) - new Date(b.fecha_vencimiento));
-                    this.verificarFechasDeVencimiento();
+                    console.log(response.data); // Verifica los datos recibidos
+                    
+                    // Agrupamos los documentos por id
+                    const documentosAgrupados = response.data.reduce((acc, doc) => {
+                        // Si el id ya está en el acumulador, agregamos el color
+                        if (!acc[doc.id]) {
+                            acc[doc.id] = { ...doc, colores: [doc.color_nombre] };
+                        } else {
+                            acc[doc.id].colores.push(doc.color_nombre);
+                        }
+                        return acc;
+                    }, {});
+                    
+                    // Convertimos el objeto agrupado en un array
+                    this.documentos = Object.values(documentosAgrupados);
+                    
+                    // Procesamos los datos para incluir el estado y la clase CSS
+                    this.documentos = this.documentos.map(doc => {
+                        const hoy = new Date();
+                        const fechaVencimiento = new Date(doc.fecha_vencimiento);
+                        const diferenciaDias = (fechaVencimiento - hoy) / (1000 * 60 * 60 * 24);
+                        
+                        return {
+                            ...doc,
+                            diasPorVencer: Math.ceil(diferenciaDias),
+                            estado: diferenciaDias > 0 ? (diferenciaDias <= 7 ? `Vence en ${Math.ceil(diferenciaDias)} días` : 'No') : `Vencido hace ${Math.abs(Math.floor(diferenciaDias))} días`,
+                            class: diferenciaDias > 0 ? (diferenciaDias <= 7 ? 'resaltar' : '') : 'vencido'
+                        };
+                    });
                 })
                 .catch(error => {
                     console.error(error);
                 });
         },
-        verificarFechasDeVencimiento() {
-            const hoy = new Date();
-            this.documentosPorVencer = this.documentos.filter(doc => {
-                const fechaVencimiento = new Date(doc.fecha_vencimiento);
-                const diferenciaDias = (fechaVencimiento - hoy) / (1000 * 60 * 60 * 24);
-                return diferenciaDias <= 7 && diferenciaDias > 0;
-            }).map(doc => doc.id);
-
-            this.documentosVencidos = this.documentos.filter(doc => {
-                const fechaVencimiento = new Date(doc.fecha_vencimiento);
-                const diferenciaDias = (fechaVencimiento - hoy) / (1000 * 60 * 60 * 24);
-                return diferenciaDias < 0;
-            }).map(doc => doc.id);
-
-            if (this.documentosPorVencer.length > 0) {
-                this.documentosPorVencer.forEach(id => {
-                    const doc = this.documentos.find(doc => doc.id === id);
-                    // Swal.fire({
-                    //     title: '¡Atención!',
-                    //     text: `El documento con patente ${doc.patente} está próximo a vencerse en ${Math.ceil((new Date(doc.fecha_vencimiento) - hoy) / (1000 * 60 * 60 * 24))} días.`,
-                    //     icon: 'warning',
-                    //     confirmButtonText: 'Aceptar'
-                    // });
-                });
-            }
-        },
+        
         getRowClass(doc) {
-            if (this.documentosPorVencer.includes(doc.id)) {
-                return 'resaltar';
-            } else if (this.documentosVencidos.includes(doc.id)) {
-                return 'vencido';
-            } else {
-                return '';
-            }
-        },
-        getRowClass(id) {
-            return this.documentosPorVencer.includes(id) ? 'resaltar' : '';
+            return doc.class || '';
         },
         formatFecha(fecha) {
             const [year, month, day] = fecha.split('-');
             return `${day}/${month}/${year}`;
         },
-
         editarDocumento(id) {
             window.location.href = "editar_documento.php?id=" + id;
         },
         eliminarDocumento(id) {
-
-        },
-
-        porVencer(fecha) {
-            const hoy = new Date();
-            const fechaVencimiento = new Date(fecha);
-            const diferenciaDias = Math.ceil((fechaVencimiento - hoy) / (1000 * 60 * 60 * 24));
-            return diferenciaDias;
-        },
+            // Confirmación del usuario antes de realizar la operación
+            if (confirm('¿Estás seguro de que deseas desactivar este documento?')) {
+                axios.post('api/documentos.php', {
+                    id: id,
+                    esta: false // Marcamos el documento como inactivo
+                })
+                .then(response => {
+                    if (response.data.success) {
+                        // Actualizamos el estado local del documento
+                        this.documentos = this.documentos.map(doc =>
+                            doc.id === id ? { ...doc, esta: false } : doc
+                        );
+                        alert('Documento desactivado con éxito');
+                    } else {
+                        alert('Error al desactivar el documento');
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('Error al comunicarse con el servidor');
+                });
+            }
+        }
+        
     },
     mounted() {
         this.obtenerDocumentos();
