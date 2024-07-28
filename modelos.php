@@ -10,9 +10,9 @@
 </head>
 <body>
     <div id="app" class="container mt-5">
-        <h1>CRUD de Modelos</h1>
+        <h1>Gestión de Modelos</h1>
         <div class="mb-3">
-            <label for="nombre" class="form-label">Nombre del Modelo</label>
+            <label for="nombre" class="form-label">Nombre</label>
             <input type="text" class="form-control" v-model="modelo.nombre" id="nombre">
         </div>
         <div class="mb-3">
