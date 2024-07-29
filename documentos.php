@@ -38,7 +38,7 @@
                     <th>Modelo</th>
                     <th>Color</th>
                     <th>Tipo</th>
-                    <th>Fecha de Vencimiento</th>
+                    <th>Vencimiento</th>
                     <th>Observación</th>
                     <th>Estado</th>
                     <th>Acciones</th>

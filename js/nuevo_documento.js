@@ -46,7 +46,12 @@ createApp({
     submitForm() {
       axios.post('api/documentos.php', this.documento)
         .then(response => {
-          alert('Documento agregado con éxito');
+          Swal.fire({
+            icon: 'success',
+            title: 'Documento agregado con éxito',
+            showConfirmButton: false,
+            timer: 1500
+          });
           // Limpiar el formulario
           this.patente = '';
           this.vehiculos = [];
@@ -60,7 +65,11 @@ createApp({
         })
         .catch(error => {
           console.error(error);
-          alert('Hubo un error al agregar el documento');
+          Swal.fire({
+            icon: 'error',
+            title: 'Hubo un error al agregar el documento',
+            text: error.message
+          });
         });
     }
   },

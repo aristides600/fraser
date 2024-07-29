@@ -27,7 +27,11 @@ createApp({
           this.documento = response.data;
         })
         .catch(error => {
-          console.error('Error al obtener el documento:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al obtener el documento: ' + error,
+          });
         });
     },
     obtenerTipos() {
@@ -36,17 +40,32 @@ createApp({
           this.tipos = response.data;
         })
         .catch(error => {
-          console.error('Error al obtener los tipos de documento:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al obtener los tipos de documento: ' + error,
+          });
         });
     },
     grabarDocumento() {
       axios.put('api/documentos.php', this.documento)
         .then(response => {
-          alert('Documento editado correctamente');
+          Swal.fire({
+            icon: 'success',
+            title: 'Éxito',
+            text: 'Documento editado correctamente',
+            showConfirmButton: false,
+            timer: 1500
+          });
         })
         .catch(error => {
-          console.error('Error al editar el documento:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Error al editar el documento: ' + error,
+          });
         });
     }
   }
 }).mount('#app');
+

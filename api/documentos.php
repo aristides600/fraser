@@ -16,7 +16,7 @@ switch ($method) {
         JOIN marcas m ON v.marca_id = m.id
         JOIN modelos mo ON v.modelo_id = mo.id
         JOIN tipos t ON d.tipo_id = t.id
-        JOIN colores c ON v.color_id = v.id";
+        JOIN colores c ON v.color_id = v.id ORDER BY d.fecha_vencimiento ASC";
         $result = $conn->query($sql);
         $documentos = [];
         while ($row = $result->fetch_assoc()) {

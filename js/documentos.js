@@ -24,10 +24,13 @@ createApp({
                     }, {});
 
                     // Convertimos el objeto agrupado en un array
-                    this.documentos = Object.values(documentosAgrupados);
+                    let documentos = Object.values(documentosAgrupados);
 
-                    // Procesamos los datos para incluir el estado y la clase CSS
-                    this.documentos = this.documentos.map(doc => {
+                    // Ordenamos los documentos por fecha de vencimiento
+                    documentos.sort((a, b) => new Date(a.fecha_vencimiento) - new Date(b.fecha_vencimiento));
+
+                    //Procesamos los datos para incluir el estado y la clase CSS
+                    this.documentos = documentos.map(doc => {
                         const hoy = new Date();
                         const fechaVencimiento = new Date(doc.fecha_vencimiento);
                         const diferenciaDias = (fechaVencimiento - hoy) / (1000 * 60 * 60 * 24);
