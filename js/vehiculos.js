@@ -24,6 +24,11 @@ const app = Vue.createApp({
         this.fetchModelos();
         this.fetchColores();
     },
+    computed: {
+        modelosFiltrados() {
+            return this.modelos.filter(modelo => modelo.marca_id === this.vehiculo.marca_id);
+        }
+    },
     methods: {
         fetchVehiculos() {
             axios.get('api/vehiculos.php')

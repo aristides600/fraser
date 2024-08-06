@@ -8,7 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <script src="https://unpkg.com/vue@next"></script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
 </head>
 
@@ -69,12 +69,19 @@
                                     <option v-for="marca in marcas" :value="marca.id">{{ marca.nombre }}</option>
                                 </select>
                             </div>
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <label for="modelo_id" class="form-label">Modelo</label>
                                 <select class="form-control" id="modelo_id" v-model="vehiculo.modelo_id" required>
                                     <option v-for="modelo in modelos" :value="modelo.id">{{ modelo.nombre }}</option>
                                 </select>
+                            </div> -->
+                            <div class="mb-3">
+                                <label for="modelo_id" class="form-label">Modelo</label>
+                                <select class="form-control" id="modelo_id" v-model="vehiculo.modelo_id" required>
+                                    <option v-for="modelo in modelosFiltrados" :value="modelo.id">{{ modelo.nombre }}</option>
+                                </select>
                             </div>
+
                             <div class="mb-3">
                                 <label for="color_id" class="form-label">Color</label>
                                 <select class="form-control" id="color_id" v-model="vehiculo.color_id" required>

@@ -20,7 +20,7 @@ switch ($method) {
         $result = $conn->query($sql);
 
         $vehiculos = [];
-        while($row = $result->fetch_assoc()) {
+        while ($row = $result->fetch_assoc()) {
             $vehiculos[] = $row;
         }
         echo json_encode($vehiculos);
@@ -74,14 +74,14 @@ switch ($method) {
         $data = json_decode(file_get_contents("php://input"), true);
         $id = $data['id'];
 
-        $sql = "DELETE FROM vehiculos WHERE id=$id";
+        // Suponiendo que el campo estado es un campo booleano (0 o 1) y false se representa como 0
+        $sql = "UPDATE vehiculos SET estado = 0 WHERE id = $id";
 
         if ($conn->query($sql) === TRUE) {
-            echo json_encode(["success" => true, "message" => "Vehículo eliminado exitosamente"]);
+            echo json_encode(["success" => true, "message" => "Vehículo marcado como eliminado exitosamente"]);
         } else {
             echo json_encode(["success" => false, "message" => "Error: " . $sql . "<br>" . $conn->error]);
         }
         break;
 }
 $conn->close();
-?>

@@ -81,19 +81,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 }
 
 // Eliminar un modelo
-if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
-    $data = json_decode(file_get_contents("php://input"), true);
-    $id = $data['id'];
+// if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
+//     $data = json_decode(file_get_contents("php://input"), true);
+//     $id = $data['id'];
 
-    $sql = "DELETE FROM modelos WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $id);
-    if ($stmt->execute()) {
-        echo json_encode(['success' => 'Modelo eliminado exitosamente']);
-    } else {
-        http_response_code(500);
-        echo json_encode(['error' => 'Error al eliminar el modelo']);
-    }
-    exit;
-}
+//     $sql = "DELETE FROM modelos WHERE id = ?";
+//     $stmt = $conn->prepare($sql);
+//     $stmt->bind_param("i", $id);
+//     if ($stmt->execute()) {
+//         echo json_encode(['success' => 'Modelo eliminado exitosamente']);
+//     } else {
+//         http_response_code(500);
+//         echo json_encode(['error' => 'Error al eliminar el modelo']);
+//     }
+//     exit;
+// }
 ?>

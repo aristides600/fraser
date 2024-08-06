@@ -45,12 +45,12 @@ switch ($method) {
             echo json_encode(['success' => true, 'message' => 'Color actualizado con éxito.']);
         }
         break;
-    case 'DELETE':
-        // Eliminar un color (lógico)
-        $id = $conn->real_escape_string($input['id']);
-        $conn->query("UPDATE colores SET estado = false WHERE id = '$id'");
-        echo json_encode(['success' => true, 'message' => 'Color eliminado con éxito.']);
-        break;
+    // case 'DELETE':
+    //     // Eliminar un color (lógico)
+    //     $id = $conn->real_escape_string($input['id']);
+    //     $conn->query("UPDATE colores SET estado = false WHERE id = '$id'");
+    //     echo json_encode(['success' => true, 'message' => 'Color eliminado con éxito.']);
+    //     break;
 }
 
 // Cerrar la conexión

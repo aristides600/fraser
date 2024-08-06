@@ -45,12 +45,12 @@ switch ($method) {
             echo json_encode(['success' => true, 'message' => 'Marca actualizada con éxito.']);
         }
         break;
-    case 'DELETE':
-        // Eliminar una marca
-        $id = $conn->real_escape_string($input['id']);
-        $conn->query("UPDATE marcas SET estado = false WHERE id = '$id'");
-        echo json_encode(['success' => true, 'message' => 'Marca eliminada con éxito.']);
-        break;
+    // case 'DELETE':
+    //     // Eliminar una marca
+    //     $id = $conn->real_escape_string($input['id']);
+    //     $conn->query("UPDATE marcas SET estado = false WHERE id = '$id'");
+    //     echo json_encode(['success' => true, 'message' => 'Marca eliminada con éxito.']);
+    //     break;
 }
 
 // Cerrar la conexión
