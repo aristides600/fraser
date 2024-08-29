@@ -10,7 +10,7 @@
 </head>
 
 <body>
-<?php include 'header.php'; ?>
+  <?php include 'header.php'; ?>
   <div id="app" class="container mt-5">
     <h2>Agregar Documento</h2>
     <form @submit.prevent="submitForm">
@@ -25,10 +25,8 @@
             <tr>
               <th>Patente</th>
               <th>Marca</th>
-
               <th>Modelo</th>
               <th>Color</th>
-
               <th>Año</th>
               <th>Acciones</th>
             </tr>
@@ -52,10 +50,8 @@
           <h5 class="card-title">Información del Vehículo</h5>
           <p class="card-text">ID: {{ vehiculoSeleccionado.id }}</p>
           <p class="card-text">Marca: {{ vehiculoSeleccionado.marca }}</p>
-
           <p class="card-text">Modelo: {{ vehiculoSeleccionado.modelo }}</p>
           <p class="card-text">Color: {{ vehiculoSeleccionado.color }}</p>
-
           <p class="card-text">Año: {{ vehiculoSeleccionado.anio }}</p>
         </div>
       </div>
@@ -71,7 +67,7 @@
       </div>
       <div class="mb-3">
         <label for="observacion" class="form-label">Observación</label>
-        <input type="text" v-model="documento.observacion" class="form-control" id="observacion" required>
+        <textarea v-model="documento.observacion" class="form-control" id="observacion" rows="3" required></textarea>
       </div>
       <button type="submit" class="btn btn-primary">Agregar Documento</button>
     </form>
