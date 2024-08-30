@@ -8,7 +8,7 @@ require_once 'api/autenticacion_abierta.php';
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <link href="./cdn/bootstrap.min.css" rel="stylesheet">
     <style>
         .login-container {
             display: flex;
@@ -77,9 +77,9 @@ require_once 'api/autenticacion_abierta.php';
             </form>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.31/dist/vue.global.prod.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./cdn/vue.global.js"></script>
+    <script src="./cdn/axios.min.js"></script>
+    <script src="./cdn/sweetalert2@10.js"></script>
     <script src="./js/mensajes.js"></script>
     <script src="./js/login.js"></script>
 </body>

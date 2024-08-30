@@ -12,27 +12,36 @@ createApp({
         tipo_id: '',
         fecha_vencimiento: '',
         observacion: ''
-      }
+      },
+      sinCoincidencias: false // Nueva variable para controlar si no hay coincidencias
     };
   },
   methods: {
     buscarVehiculos() {
-      if (this.patente.length > 2) {
+      if (this.patente.length > 0) {
         axios.get('api/vehiculos_patente.php', { params: { patente: this.patente } })
           .then(response => {
             this.vehiculos = response.data;
+            if (this.vehiculos.length === 0) {
+              this.sinCoincidencias = true;
+            } else {
+              this.sinCoincidencias = false;
+            }
           })
           .catch(error => {
             console.error(error);
             this.vehiculos = [];
+            this.sinCoincidencias = true;
           });
       } else {
         this.vehiculos = [];
+        this.sinCoincidencias = false; // Reinicia la variable cuando no hay búsqueda
       }
     },
     seleccionarVehiculo(vehiculo) {
       this.vehiculoSeleccionado = vehiculo;
       this.documento.vehiculo_id = vehiculo.id;
+      this.vehiculos = []; // Ocultar tabla de coincidencias al seleccionar un vehículo
     },
     cargarTipos() {
       axios.get('api/tipos.php')

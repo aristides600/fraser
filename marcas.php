@@ -5,11 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD de Marcas</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="./cdn/bootstrap.min.css" rel="stylesheet">
+    <link href="./cdn/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/estilos.css">
+
 </head>
 
 <body>
+<?php include 'header.php'; ?>
+
     <div id="app" class="container mt-5">
         <h1 class="mb-4">Gestión de Marcas</h1>
         <form @submit.prevent="addMarca">
@@ -46,10 +50,12 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.47/dist/vue.global.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios@1.3.4/dist/axios.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <script src="./cdn/vue.global.js"></script>
+    <script src="./cdn/axios.min.js"></script>
+    <script src="./cdn/sweetalert2@10.js"></script>
     <script src="./js/marcas.js"></script>
+    <?php include 'footer.php'; ?>
+
 </body>
 
 </html>

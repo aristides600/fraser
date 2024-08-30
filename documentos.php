@@ -5,23 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Aplicación CRUD</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./cdn/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <style>
-        .resaltar {
-            background-color: #FFFF99;
-            /* Amarillo claro */
-        }
-
-        .vencido {
-            background-color: #FFCCCC;
-            /* Rojo claro */
-        }
-    </style>
+    <link href="./cdn/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/estilos.css">
+    
 </head>
 
 <body>
+    <?php include 'header.php'; ?>
 
     <div id="app" class="container mt-5">
         <h1>Gestión de Documentos</h1>
@@ -64,17 +56,22 @@
                     </td>
                     <td>
                         <button class="btn btn-warning" @click="editarDocumento(doc.id)"><i class="bi bi-pencil"></i></button>
-                        <button class="btn btn-danger" @click="eliminarDocumento(doc.id)"><i class="bi bi-trash"></i></button>
+                        <!-- <button class="btn btn-danger" @click="eliminarDocumento(doc.id)"><i class="bi bi-trash"></i></button> -->
                     </td>
                 </tr>
             </tbody>
         </table>
+        <div class="d-flex justify-content-end mt-4">
+            <a href="index.php" class="btn btn-danger">Salir</a>
+        </div>
     </div>
+    <?php include 'footer.php'; ?>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.37/dist/vue.global.prod.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./cdn/vue.global.js"></script>
+    <script src="./cdn/axios.min.js"></script>
+    <script src="./cdn/sweetalert2@10.js"></script>
     <script src="./js/documentos.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </body>
 
 </html>

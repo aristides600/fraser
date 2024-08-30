@@ -5,8 +5,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agregar Documento</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="./cdn/bootstrap.min.css" rel="stylesheet">
+  <link href="./cdn/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="./css/estilos.css">
+
 </head>
 
 <body>
@@ -16,8 +18,15 @@
     <form @submit.prevent="submitForm">
       <div class="mb-3">
         <label for="patente" class="form-label">Patente del Vehículo</label>
-        <input type="text" v-model="patente" @input="buscarVehiculos" class="form-control" id="patente" required>
+        <input type="search" v-model="patente" @input="buscarVehiculos" class="form-control" id="patente" required>
       </div>
+
+      <!-- Mensaje si no hay coincidencias -->
+      <div v-if="sinCoincidencias" class="alert alert-warning" role="alert">
+        No se encontraron vehículos con esa patente.
+      </div>
+
+      <!-- Tabla de coincidencias -->
       <div v-if="vehiculos.length > 0" class="mb-3">
         <h5>Coincidencias</h5>
         <table class="table table-bordered">
@@ -45,6 +54,8 @@
           </tbody>
         </table>
       </div>
+
+      <!-- Información del vehículo seleccionado -->
       <div v-if="vehiculoSeleccionado" class="card mb-3">
         <div class="card-body">
           <h5 class="card-title">Información del Vehículo</h5>
@@ -55,6 +66,8 @@
           <p class="card-text">Año: {{ vehiculoSeleccionado.anio }}</p>
         </div>
       </div>
+
+      <!-- Formulario para agregar el documento -->
       <div class="mb-3">
         <label for="tipo_id" class="form-label">Tipo de Documento</label>
         <select v-model="documento.tipo_id" class="form-control" id="tipo_id" required>
@@ -71,10 +84,14 @@
       </div>
       <button type="submit" class="btn btn-primary">Agregar Documento</button>
     </form>
+    <div class="d-flex justify-content-end mt-4">
+      <a href="index.php" class="btn btn-danger">Salir</a>
+    </div>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/vue@3.2.21/dist/vue.global.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+
+  <script src="./cdn/vue.global.js"></script>
+  <script src="./cdn/axios.min.js"></script>
+  <script src="./cdn/sweetalert2@10.js"></script>
   <script src="./js/nuevo_documento.js"></script>
   <?php include 'footer.php'; ?>
 </body>

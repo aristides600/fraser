@@ -1,10 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestión de Documentos</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="./cdn/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <link href="./cdn/bootstrap-icons.css" rel="stylesheet">
     <style>
         .logo-title-container {
             display: flex;
@@ -13,12 +18,28 @@
             padding: 10px;
             color: white;
         }
+
         .logo-title-container img {
-            height: 50px; /* Tamaño del logo */
+            height: 50px;
+            /* Tamaño del logo */
             margin-right: 10px;
+        }
+
+        .logout-button {
+            background-color: transparent;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .logout-button:hover {
+            color: #0056b3;
         }
     </style>
 </head>
+
 <body>
     <div class="container-fluid">
         <div class="logo-title-container">
@@ -48,6 +69,12 @@
                             <a class="nav-link" href="colores.php">Colores</a>
                         </li>
                     </ul>
+                    <!-- Botón de cerrar sesión alineado a la derecha -->
+                    <form class="d-flex ms-auto" action="logout.php" method="POST">
+                        <button class="logout-button" type="submit">
+                            <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+                        </button>
+                    </form>
                 </div>
             </div>
         </nav>
@@ -61,7 +88,7 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+    <script src="./cdn/popper.min.js"></script>
 </body>
+
 </html>

@@ -5,8 +5,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Editar Documento</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+  <link href="./cdn/bootstrap.min.css" rel="stylesheet">
+  <link href="./cdn/bootstrap-icons.css" rel="stylesheet">
 </head>
 
 <body>
@@ -31,9 +32,9 @@
       <button type="submit" class="btn btn-primary">Grabar</button>
     </form>
   </div>
-  <script src="https://cdn.jsdelivr.net/npm/vue@3.2.21/dist/vue.global.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+  <script src="./cdn/vue.global.js"></script>
+  <script src="./cdn/axios.min.js"></script>
+  <script src="./cdn/sweetalert2@10.js"></script>
   <script src="./js/editar_documento.js"></script>
   <?php include 'footer.php'; ?>
 </body>
