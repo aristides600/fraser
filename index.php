@@ -6,47 +6,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Gestión de Documentos</title>
 
-    <link href="./cdn/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 
-    <link href="./cdn/bootstrap-icons.css" rel="stylesheet">
     <style>
         .logo-title-container {
             display: flex;
             align-items: center;
-            background-color: red;
+            background-color: #dc3545;
             padding: 10px;
             color: white;
         }
 
         .logo-title-container img {
             height: 50px;
-            /* Tamaño del logo */
             margin-right: 10px;
         }
 
-        .logout-button {
-            background-color: transparent;
+        .logout-button,
+        .change-password-button {
+            background-color: #dc3545;
             border: none;
-            color: #007bff;
+            color: white;
             cursor: pointer;
             display: flex;
             align-items: center;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
         }
 
-        .logout-button:hover {
-            color: #0056b3;
+        .logout-button:hover,
+        .change-password-button:hover {
+            background-color: #b02a37;
+        }
+
+        .card-container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .card {
+            flex: 1;
+            margin: 10px;
+        }
+
+        .navbar {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .nav-link {
+            color: #343a40;
+            transition: color 0.3s ease;
+        }
+
+        .nav-link:hover {
+            color: #007bff;
         }
     </style>
 </head>
 
 <body>
-    <div class="container-fluid">
+    <div id="app" class="container-fluid p-0">
+        <!-- Header -->
         <div class="logo-title-container">
             <img src="./img/Logo.png" alt="Logo">
             <h3>Sistema de Gestión de Documentos</h3>
         </div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light mt-3">
+
+        <!-- Menú de navegación -->
+        <nav class="navbar navbar-expand-lg navbar-light">
             <div class="container-fluid">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -56,39 +87,93 @@
                         <li class="nav-item">
                             <a class="nav-link" href="documentos.php">Documentos</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="vehiculos.php">Vehículos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="marcas.php">Marcas</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="modelos.php">Modelos</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="colores.php">Colores</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="vehiculosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Vehículos
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="vehiculosDropdown">
+                                <li><a class="dropdown-item" href="vehiculos.php">Vehículos</a></li>
+                                <li><a class="dropdown-item" href="marcas.php">Marcas</a></li>
+                                <li><a class="dropdown-item" href="modelos.php">Modelos</a></li>
+                                <li><a class="dropdown-item" href="colores.php">Colores</a></li>
+                            </ul>
                         </li>
                     </ul>
-                    <!-- Botón de cerrar sesión alineado a la derecha -->
-                    <form class="d-flex ms-auto" action="logout.php" method="POST">
-                        <button class="logout-button" type="submit">
+                    <form class="d-flex ms-auto">
+                        <!-- Botón de cerrar sesión -->
+                        <button class="logout-button" type="submit" formaction="logout.php" method="POST">
                             <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+                        </button>
+                        <!-- Botón de cambiar contraseña -->
+                        <button class="change-password-button ms-3" type="button" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                            <i class="bi bi-key-fill"></i>
                         </button>
                     </form>
                 </div>
             </div>
         </nav>
-    </div>
 
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-12">
-                <p class="text-center">Seleccione una opción del menú para comenzar a gestionar los documentos, marcas y modelos.</p>
+        <!-- Contenido principal -->
+        <div class="card-container">
+            <div class="card">
+                <div class="card-header">
+                    <i class="bi bi-calendar"></i> Vehículos
+                </div>
+                <div class="card-body">
+                    <p>Gestión de Vehículos.</p>
+                    <a href="vehiculos.php" class="btn btn-primary">Ir a Vehículos</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="bi bi-calendar"></i> Documentos
+                </div>
+                <div class="card-body">
+                    <p>Gestión de Documentos.</p>
+                    <a href="documentos.php" class="btn btn-primary">Ir a Documentos</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal para cambiar contraseña -->
+        <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="changePasswordModalLabel">Cambiar Contraseña</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="changePasswordForm">
+                            <div class="mb-3">
+                                <label for="currentPassword" class="form-label">Contraseña Actual</label>
+                                <input type="password" class="form-control" id="currentPassword" v-model="currentPassword" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                                <input type="password" class="form-control" id="newPassword" v-model="newPassword" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="confirmPassword" class="form-label">Confirmar Nueva Contraseña</label>
+                                <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" @click="changePassword">Guardar Cambios</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <script src="./cdn/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.2.31/dist/vue.global.prod.js"></script>
+    <script src="./cdn/sweetalert2@10.js"></script>
+    <script src="./js/index.js"></script>
+
 </body>
 
 </html>

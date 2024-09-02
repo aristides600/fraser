@@ -8,6 +8,8 @@
 
   <link href="./cdn/bootstrap.min.css" rel="stylesheet">
   <link href="./cdn/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="./css/estilos.css">
+
 </head>
 
 <body>

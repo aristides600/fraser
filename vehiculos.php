@@ -5,14 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CRUD Vehículos</title>
-    <link href="./cdn/bootstrap.min.css" rel="stylesheet">
-    <link href="./cdn/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/estilos.css">
+    <!-- <link href="./cdn/bootstrap.min.css" rel="stylesheet"> -->
+
+    <!-- <link href="./cdn/bootstrap-icons.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="./css/estilos.css">
 
 </head>
 
 <body>
-<?php include 'header.php'; ?>
+    <?php include 'header.php'; ?>
 
     <div id="app" class="container mt-5">
         <h1 class="mb-4">Gestión de Vehículos</h1>
@@ -109,6 +113,7 @@
                                 </select>
                             </div>
                             <button type="submit" class="btn btn-primary">{{ isEdit ? 'Actualizar' : 'Agregar' }}</button>
+                            
                         </form>
                     </div>
                 </div>
@@ -123,6 +128,7 @@
     <script src="./cdn/axios.min.js"></script>
     <script src="./cdn/sweetalert2@10.js"></script>
     <script src="./cdn/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/vehiculos.js"></script>
     <?php include 'footer.php'; ?>
 

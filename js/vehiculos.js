@@ -15,7 +15,8 @@ const app = Vue.createApp({
                 corroceria: '',
                 estado: ''
             },
-            isEdit: false
+            isEdit: false,
+            vehiculoModal: null // Store the modal instance
         }
     },
     mounted() {
@@ -23,6 +24,9 @@ const app = Vue.createApp({
         this.fetchMarcas();
         this.fetchModelos();
         this.fetchColores();
+
+        // Initialize the modal instance after the DOM is fully loaded
+        this.vehiculoModal = new bootstrap.Modal(document.getElementById('vehiculoModal'));
     },
     computed: {
         modelosFiltrados() {
@@ -78,18 +82,18 @@ const app = Vue.createApp({
                 corroceria: '',
                 estado: ''
             };
-            new bootstrap.Modal(document.getElementById('vehiculoModal')).show();
+            this.vehiculoModal.show(); // Show the modal
         },
         showEditModal(vehiculo) {
             this.isEdit = true;
             this.vehiculo = Object.assign({}, vehiculo);
-            new bootstrap.Modal(document.getElementById('vehiculoModal')).show();
+            this.vehiculoModal.show(); // Show the modal
         },
         addVehiculo() {
             axios.post('api/vehiculos.php', this.vehiculo)
                 .then(response => {
                     this.fetchVehiculos();
-                    new bootstrap.Modal(document.getElementById('vehiculoModal')).hide();
+                    this.vehiculoModal.hide(); // Hide the modal
                     Swal.fire('Éxito', response.data.message, 'success');
                 })
                 .catch(error => {
@@ -100,7 +104,7 @@ const app = Vue.createApp({
             axios.put('api/vehiculos.php', this.vehiculo)
                 .then(response => {
                     this.fetchVehiculos();
-                    new bootstrap.Modal(document.getElementById('vehiculoModal')).hide();
+                    this.vehiculoModal.hide(); // Hide the modal
                     Swal.fire('Éxito', response.data.message, 'success');
                 })
                 .catch(error => {
