@@ -66,8 +66,9 @@
                         <form @submit.prevent="isEdit ? updateVehiculo() : addVehiculo()">
                             <div class="mb-3">
                                 <label for="patente" class="form-label">Patente</label>
-                                <input type="text" class="form-control" id="patente" v-model="vehiculo.patente" required>
+                                <input type="text" class="form-control" id="patente" v-model="vehiculo.patente" maxlength="8" required>
                             </div>
+
                             <div class="mb-3">
                                 <label for="marca_id" class="form-label">Marca</label>
                                 <select class="form-control" id="marca_id" v-model="vehiculo.marca_id" required>
@@ -105,15 +106,15 @@
                                 <label for="corroceria" class="form-label">Corrocería</label>
                                 <input type="text" class="form-control" id="corroceria" v-model="vehiculo.corroceria" required>
                             </div>
-                            <div class="mb-3">
+                            <!-- <div class="mb-3">
                                 <label for="estado" class="form-label">Estado</label>
                                 <select class="form-control" id="estado" v-model="vehiculo.estado" required>
                                     <option value="1">Activo</option>
                                     <option value="0">Inactivo</option>
                                 </select>
-                            </div>
+                            </div> -->
                             <button type="submit" class="btn btn-primary">{{ isEdit ? 'Actualizar' : 'Agregar' }}</button>
-                            
+
                         </form>
                     </div>
                 </div>

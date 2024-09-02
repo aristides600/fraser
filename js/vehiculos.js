@@ -92,25 +92,69 @@ const app = Vue.createApp({
         addVehiculo() {
             axios.post('api/vehiculos.php', this.vehiculo)
                 .then(response => {
-                    this.fetchVehiculos();
-                    this.vehiculoModal.hide(); // Hide the modal
-                    Swal.fire('Éxito', response.data.message, 'success');
+                    if (response.data.success) {
+                        this.fetchVehiculos();
+                        this.vehiculoModal.hide(); // Hide the modal
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: response.data.message,
+                            icon: 'success', // Success icon
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: response.data.message,
+                            icon: 'error', // Error icon with a circle and a cross
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#d33' // Red color for the error message
+                        });
+                    }
                 })
                 .catch(error => {
-                    Swal.fire('Error', error.response.data.message, 'error');
+                    Swal.fire({
+                        title: 'Error',
+                        text: error.response.data.message || 'Error desconocido',
+                        icon: 'error', // Error icon with a circle and a cross
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#d33' // Red color for the error message
+                    });
                 });
         },
+
         updateVehiculo() {
             axios.put('api/vehiculos.php', this.vehiculo)
                 .then(response => {
-                    this.fetchVehiculos();
-                    this.vehiculoModal.hide(); // Hide the modal
-                    Swal.fire('Éxito', response.data.message, 'success');
+                    if (response.data.success) {
+                        this.fetchVehiculos();
+                        this.vehiculoModal.hide(); // Hide the modal
+                        Swal.fire({
+                            title: 'Éxito',
+                            text: response.data.message,
+                            icon: 'success', // Success icon
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error',
+                            text: response.data.message,
+                            icon: 'error', // Error icon with a circle and a cross
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#d33' // Red color for the error message
+                        });
+                    }
                 })
                 .catch(error => {
-                    Swal.fire('Error', error.response.data.message, 'error');
+                    Swal.fire({
+                        title: 'Error',
+                        text: error.response.data.message || 'Error desconocido',
+                        icon: 'error', // Error icon with a circle and a cross
+                        confirmButtonText: 'OK',
+                        confirmButtonColor: '#d33' // Red color for the error message
+                    });
                 });
         },
+
         deleteVehiculo(id) {
             Swal.fire({
                 title: '¿Estás seguro?',
