@@ -56,7 +56,7 @@
                     </td>
                     <td>
                         <button class="btn btn-warning" @click="editarDocumento(doc.id)"><i class="bi bi-pencil"></i></button>
-                        <!-- <button class="btn btn-danger" @click="eliminarDocumento(doc.id)"><i class="bi bi-trash"></i></button> -->
+                        <button class="btn btn-ok" @click="tramitarDocumento(doc.id)"><i class="bi bi-check-circle"></i></button>
                     </td>
                 </tr>
             </tbody>

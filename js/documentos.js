@@ -58,34 +58,45 @@ createApp({
         editarDocumento(id) {
             window.location.href = "editar_documento.php?id=" + id;
         },
-        eliminarDocumento(id) {
+        tramitarDocumento(id) {
             // Confirmación del usuario antes de realizar la operación
-            if (confirm('¿Estás seguro de que deseas desactivar este documento?')) {
-                axios.post('api/documentos.php', {
-                    id: id,
-                    esta: false // Marcamos el documento como inactivo
+            if (confirm('¿Estás seguro de que deseas tramitar este documento?')) {
+                axios.delete('api/documentos.php', {
+                    data: { id: id, estado: false } // Enviamos el ID y el estado que queremos actualizar
                 })
-                    .then(response => {
-                        if (response.data.success) {
-                            // Actualizamos el estado local del documento
-                            this.documentos = this.documentos.map(doc =>
-                                doc.id === id ? { ...doc, esta: false } : doc
-                            );
-                            alert('Documento desactivado con éxito');
-                        } else {
-                            alert('Error al desactivar el documento');
-                        }
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        alert('Error al comunicarse con el servidor');
-                    });
+                .then(response => {
+                    if (response.data.success) {
+                        // Actualizamos el estado local del documento
+                        this.documentos = this.documentos.map(doc =>
+                            doc.id === id ? { ...doc, estado: false } : doc
+                        );
+                        alert('Documento tramitado con éxito');
+                    } else {
+                        alert('Error al tramitar el documento');
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('Error al comunicarse con el servidor');
+                });
             }
         },
+        
+        
         nuevoDocumento() {
             window.location.href = "nuevo_documento.php";
         },
 
+    },
+    computed: {
+        // Filtrar los documentos pendientes
+        documentosPendientes() {
+            return this.documentos.filter(doc => doc.estado === 1);
+        },
+        // Filtrar los documentos tramitados
+        documentosTramitados() {
+            return this.documentos.filter(doc => doc.estado === 0);
+        }
     },
     mounted() {
         this.obtenerDocumentos();

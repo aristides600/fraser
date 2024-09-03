@@ -17,7 +17,7 @@ switch ($method) {
                 JOIN marcas m ON v.marca_id = m.id
                 JOIN modelos mo ON v.modelo_id = mo.id
                 JOIN tipos t ON d.tipo_id = t.id
-                JOIN colores c ON v.color_id = c.id
+                JOIN colores c ON v.color_id = c.id WHERE d.estado = 1
                 ORDER BY d.fecha_vencimiento ASC";
         $result = $conn->query($sql);
         $documentos = [];
@@ -68,15 +68,21 @@ switch ($method) {
         break;
 
     case 'DELETE':
+        // Capturamos el input enviado en la solicitud DELETE
+        $input = json_decode(file_get_contents('php://input'), true);
         $id = $conn->real_escape_string($input['id']);
-        $sql = "UPDATE documentos SET estado = 0 WHERE id = $id";
+        $estado = $conn->real_escape_string($input['estado']) ? 1 : 0;
+
+        // Actualizamos el estado del documento en la base de datos
+        $sql = "UPDATE documentos SET estado = $estado WHERE id = $id";
 
         if ($conn->query($sql) === TRUE) {
-            echo json_encode(['success' => true, 'message' => 'Documento eliminado con éxito.']);
+            echo json_encode(['success' => true, 'message' => 'Documento tramitado con éxito.']);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Error al eliminar el documento.']);
+            echo json_encode(['success' => false, 'message' => 'Error al tramitar el documento.']);
         }
         break;
+
 
     default:
         http_response_code(405);

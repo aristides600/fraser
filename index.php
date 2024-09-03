@@ -43,13 +43,35 @@
 
         .card-container {
             display: flex;
-            justify-content: space-around;
+            justify-content: center;
+            gap: 20px;
             margin-top: 20px;
         }
 
         .card {
-            flex: 1;
-            margin: 10px;
+            width: 18rem;
+            text-align: center;
+        }
+
+        .card-header {
+            background-color: #dc3545;
+            color: white;
+            font-size: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-header i {
+            margin-right: 10px;
+        }
+
+        .card-body {
+            padding: 1.25rem;
+        }
+
+        .card-body .btn {
+            margin-top: 10px;
         }
 
         .navbar {
@@ -98,6 +120,14 @@
                                 <li><a class="dropdown-item" href="colores.php">Colores</a></li>
                             </ul>
                         </li>
+                        <!-- <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="usuariosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Usuarios
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="usuariosDropdown">
+                                <li><a class="dropdown-item" href="usuarios.php">Usuarios</a></li>
+                            </ul>
+                        </li> -->
                     </ul>
                     <form class="d-flex ms-auto">
                         <!-- Botón de cerrar sesión -->
@@ -117,7 +147,7 @@
         <div class="card-container">
             <div class="card">
                 <div class="card-header">
-                    <i class="bi bi-calendar"></i> Vehículos
+                    <i class="bi bi-car-front"></i> Vehículos
                 </div>
                 <div class="card-body">
                     <p>Gestión de Vehículos.</p>
@@ -127,7 +157,7 @@
 
             <div class="card">
                 <div class="card-header">
-                    <i class="bi bi-calendar"></i> Documentos
+                    <i class="bi bi-file-earmark-text"></i> Documentos
                 </div>
                 <div class="card-body">
                     <p>Gestión de Documentos.</p>
