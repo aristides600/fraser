@@ -7,7 +7,7 @@
     <title>Aplicación CRUD</title>
     <link href="./cdn/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
-    <link href="./cdn/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/estilos.css">
     
 </head>
@@ -22,6 +22,7 @@
                 <i class="bi bi-plus"></i> Nuevo Documento
             </button>
         </div>
+       
         <table class="table mt-4">
             <thead>
                 <tr>

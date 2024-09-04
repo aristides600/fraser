@@ -38,8 +38,8 @@ createApp({
                         return {
                             ...doc,
                             diasPorVencer: Math.ceil(diferenciaDias),
-                            estado: diferenciaDias > 0 ? (diferenciaDias <= 7 ? `Vence en ${Math.ceil(diferenciaDias)} días` : 'No') : `Vencido hace ${Math.abs(Math.floor(diferenciaDias))} días`,
-                            class: diferenciaDias > 0 ? (diferenciaDias <= 7 ? 'resaltar' : '') : 'vencido'
+                            estado: diferenciaDias > 0 ? (diferenciaDias <= 10 ? `Vence en ${Math.ceil(diferenciaDias)} días` : 'No') : `Vencido hace ${Math.abs(Math.floor(diferenciaDias))} días`,
+                            class: diferenciaDias > 0 ? (diferenciaDias <= 10 ? 'resaltar' : '') : 'vencido'
                         };
                     });
                 })
@@ -58,31 +58,54 @@ createApp({
         editarDocumento(id) {
             window.location.href = "editar_documento.php?id=" + id;
         },
+
+
         tramitarDocumento(id) {
-            // Confirmación del usuario antes de realizar la operación
-            if (confirm('¿Estás seguro de que deseas tramitar este documento?')) {
-                axios.delete('api/documentos.php', {
-                    data: { id: id, estado: false } // Enviamos el ID y el estado que queremos actualizar
-                })
-                .then(response => {
-                    if (response.data.success) {
-                        // Actualizamos el estado local del documento
-                        this.documentos = this.documentos.map(doc =>
-                            doc.id === id ? { ...doc, estado: false } : doc
-                        );
-                        alert('Documento tramitado con éxito');
-                    } else {
-                        alert('Error al tramitar el documento');
+            Swal.fire({
+                title: 'Tramitar Documento',
+                text: "Ingrese una observación antes de tramitar:",
+                input: 'text',
+                inputPlaceholder: 'Observación',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Tramitar',
+                cancelButtonText: 'Cancelar',
+                preConfirm: (observacion) => {
+                    if (!observacion) {
+                        Swal.showValidationMessage('Debe ingresar una observación');
                     }
-                })
-                .catch(error => {
-                    console.error(error);
-                    alert('Error al comunicarse con el servidor');
-                });
-            }
+                    return observacion;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const observacion = result.value;
+
+                    // Crear un objeto FormData para enviar los datos en formato compatible con $_POST
+                    const formData = new FormData();
+                    formData.append('documento_id', id);
+                    formData.append('observacion', observacion);
+
+                    axios.post('api/tramitar_documento.php', formData)
+                        .then(response => {
+                            console.log(response.data); // Verificar la respuesta del servidor
+                            if (response.data.success) {
+                                Swal.fire('Tramitado', 'El documento ha sido tramitado con éxito.', 'success');
+                                this.obtenerDocumentos(); // Actualizar la lista de documentos
+                            } else {
+                                Swal.fire('Error', response.data.error || 'Hubo un problema al tramitar el documento.', 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error(error);
+                            Swal.fire('Error', 'Ocurrió un error al tramitar el documento.', 'error');
+                        });
+                }
+            });
         },
-        
-        
+
+
+
         nuevoDocumento() {
             window.location.href = "nuevo_documento.php";
         },
