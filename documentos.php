@@ -9,7 +9,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/estilos.css">
-    
+
 </head>
 
 <body>
@@ -22,7 +22,18 @@
                 <i class="bi bi-plus"></i> Nuevo Documento
             </button>
         </div>
-       
+        <div class="mb-3">
+            <label for="patente" class="form-label">Patente del Vehículo</label>
+            <input type="search" v-model="patente" @input="obtenerDocumentos" class="form-control" id="patente" maxlength="7">
+        </div>
+
+
+        <!-- Mensaje si no hay coincidencias -->
+        <div v-if="sinCoincidencias" class="alert alert-warning" role="alert">
+            No se encontraron vehículos con esa patente.
+        </div>
+
+
         <table class="table mt-4">
             <thead>
                 <tr>
@@ -34,7 +45,9 @@
                     <th>Vencimiento</th>
                     <th>Observación</th>
                     <th>Estado</th>
+                    <th>Creado</th>
                     <th>Acciones</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -55,6 +68,8 @@
                         </span>
                         <span v-else>No</span>
                     </td>
+                    <td>{{ `${doc.usuario_nombre} ${doc.usuario_apellido}` }}</td>
+
                     <td>
                         <button class="btn btn-warning" @click="editarDocumento(doc.id)"><i class="bi bi-pencil"></i></button>
                         <button class="btn btn-ok" @click="tramitarDocumento(doc.id)"><i class="bi bi-check-circle"></i></button>

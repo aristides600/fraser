@@ -106,8 +106,15 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item">
-                            <a class="nav-link" href="documentos.php">Documentos</a>
+                    <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="documentosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Documentos
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="vehiculosDropdown">
+                                <li><a class="dropdown-item" href="documentos.php">Pendientes</a></li>
+                                <li><a class="dropdown-item" href="documentos_tramitados.php">Tramitados</a></li>
+                              
+                            </ul>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="vehiculosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

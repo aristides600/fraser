@@ -11,12 +11,14 @@ switch ($method) {
     case 'GET':
         $sql = "SELECT d.id, d.vehiculo_id, d.tipo_id, d.fecha_vencimiento, d.observacion, 
                 v.patente, m.nombre AS marca_nombre, mo.nombre AS modelo_nombre, 
-                t.nombre AS tipo_nombre, c.nombre AS color_nombre
+                t.nombre AS tipo_nombre, u.nombre AS usuario_nombre, u.apellido AS usuario_apellido, c.nombre AS color_nombre
                 FROM documentos d
                 JOIN vehiculos v ON d.vehiculo_id = v.id
                 JOIN marcas m ON v.marca_id = m.id
                 JOIN modelos mo ON v.modelo_id = mo.id
                 JOIN tipos t ON d.tipo_id = t.id
+                JOIN usuarios u ON d.usuario_id = u.id
+
                 JOIN colores c ON v.color_id = c.id WHERE d.estado = 1
                 ORDER BY d.fecha_vencimiento ASC";
         $result = $conn->query($sql);
@@ -67,21 +69,21 @@ switch ($method) {
         }
         break;
 
-    // case 'DELETE':
-    //     // Capturamos el input enviado en la solicitud DELETE
-    //     $input = json_decode(file_get_contents('php://input'), true);
-    //     $id = $conn->real_escape_string($input['id']);
-    //     $estado = $conn->real_escape_string($input['estado']) ? 1 : 0;
+        // case 'DELETE':
+        //     // Capturamos el input enviado en la solicitud DELETE
+        //     $input = json_decode(file_get_contents('php://input'), true);
+        //     $id = $conn->real_escape_string($input['id']);
+        //     $estado = $conn->real_escape_string($input['estado']) ? 1 : 0;
 
-    //     // Actualizamos el estado del documento en la base de datos
-    //     $sql = "UPDATE documentos SET estado = $estado WHERE id = $id";
+        //     // Actualizamos el estado del documento en la base de datos
+        //     $sql = "UPDATE documentos SET estado = $estado WHERE id = $id";
 
-    //     if ($conn->query($sql) === TRUE) {
-    //         echo json_encode(['success' => true, 'message' => 'Documento tramitado con éxito.']);
-    //     } else {
-    //         echo json_encode(['success' => false, 'message' => 'Error al tramitar el documento.']);
-    //     }
-    //     break;
+        //     if ($conn->query($sql) === TRUE) {
+        //         echo json_encode(['success' => true, 'message' => 'Documento tramitado con éxito.']);
+        //     } else {
+        //         echo json_encode(['success' => false, 'message' => 'Error al tramitar el documento.']);
+        //     }
+        //     break;
 
 
     default:

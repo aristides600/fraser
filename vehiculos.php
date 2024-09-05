@@ -32,7 +32,7 @@
                     <th>Motor</th>
                     <th>Año</th>
                     <th>Corrocería</th>
-                    <th>Estado</th>
+                    <!-- <th>Estado</th> -->
                     <th>Acciones</th>
                 </tr>
             </thead>
@@ -45,10 +45,15 @@
                     <td>{{ vehiculo.motor }}</td>
                     <td>{{ vehiculo.anio }}</td>
                     <td>{{ vehiculo.corroceria }}</td>
-                    <td>{{ vehiculo.estado == 1 ? 'Activo' : 'Inactivo' }}</td>
+                    <!-- <td>{{ vehiculo.estado == 1 ? 'Activo' : 'Inactivo' }}</td> -->
                     <td>
-                        <button @click="showEditModal(vehiculo)" class="btn btn-warning">Editar</button>
-                        <!-- <button @click="deleteVehiculo(vehiculo.id)" class="btn btn-danger">Eliminar</button> -->
+                        <button @click="showEditModal(vehiculo)" class="btn btn-warning">
+                            <i class="bi bi-pencil-square"></i>
+                        </button>
+                        <button @click="deleteVehiculo(vehiculo.id)" class="btn btn-danger">
+                            <i class="bi bi-trash"></i>
+                        </button>
+
                     </td>
                 </tr>
             </tbody>
