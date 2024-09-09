@@ -8,7 +8,8 @@ require_once 'api/autenticacion_abierta.php';
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
-    <link href="./cdn/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         .login-container {
             display: flex;
@@ -80,7 +81,6 @@ require_once 'api/autenticacion_abierta.php';
     <script src="./cdn/vue.global.js"></script>
     <script src="./cdn/axios.min.js"></script>
     <script src="./cdn/sweetalert2@10.js"></script>
-    <script src="./js/mensajes.js"></script>
     <script src="./js/login.js"></script>
 </body>
 

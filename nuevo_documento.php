@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Agregar Documento</title>
-  <link href="./cdn/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
   <link href="./cdn/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="./css/estilos.css">
 
@@ -55,15 +55,33 @@
         </table>
       </div>
 
-      <!-- Información del vehículo seleccionado -->
       <div v-if="vehiculoSeleccionado" class="card mb-3">
         <div class="card-body">
-          <h5 class="card-title">Información del Vehículo</h5>
-          <p class="card-text">ID: {{ vehiculoSeleccionado.id }}</p>
-          <p class="card-text">Marca: {{ vehiculoSeleccionado.marca }}</p>
-          <p class="card-text">Modelo: {{ vehiculoSeleccionado.modelo }}</p>
-          <p class="card-text">Color: {{ vehiculoSeleccionado.color }}</p>
-          <p class="card-text">Año: {{ vehiculoSeleccionado.anio }}</p>
+          <h5 class="card-title text-center">Información del Vehículo</h5>
+          <div class="row">
+            <!-- <div class="col-6">
+              <p class="card-text"><strong>ID:</strong> {{ vehiculoSeleccionado.id }}</p>
+            </div> -->
+            <div class="col-6">
+              <p class="card-text"><strong>Patente:</strong> {{ vehiculoSeleccionado.patente }}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <p class="card-text"><strong>Marca:</strong> {{ vehiculoSeleccionado.marca }}</p>
+            </div>
+            <div class="col-6">
+              <p class="card-text"><strong>Modelo:</strong> {{ vehiculoSeleccionado.modelo }}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <p class="card-text"><strong>Color:</strong> {{ vehiculoSeleccionado.color }}</p>
+            </div>
+            <div class="col-6">
+              <p class="card-text"><strong>Año:</strong> {{ vehiculoSeleccionado.anio }}</p>
+            </div>
+          </div>
         </div>
       </div>
 

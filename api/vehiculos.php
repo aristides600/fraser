@@ -30,14 +30,15 @@ switch ($method) {
 
         $data = json_decode(file_get_contents("php://input"), true);
 
-        $patente = $data['patente'];
+        $patente = strtoupper($data['patente']);  // Convertir a mayúsculas
+
         $fecha_alta = date('Y-m-d');  // Asegura que la fecha esté formateada correctamente
         $marca_id = $data['marca_id'];
         $color_id = $data['color_id'];
-        $motor = $data['motor'];
+        $motor = strtoupper($data['motor']);  // Convertir a mayúsculas
         $modelo_id = $data['modelo_id'];
         $anio = $data['anio'];
-        $corroceria = $data['corroceria'];
+        $corroceria = strtoupper($data['corroceria']);  // Convertir a mayúsculas
         $estado = 1;
 
         // Verificar si la patente ya existe
@@ -48,7 +49,7 @@ switch ($method) {
             echo json_encode(["success" => false, "message" => "Error: La patente ya existe en otro vehículo."]);
         } else {
             $sql = "INSERT INTO vehiculos (patente, fecha_alta, marca_id, color_id, motor, modelo_id, anio, corroceria, estado) 
-                    VALUES ('$patente', '$fecha_alta', $marca_id, $color_id, '$motor', $modelo_id, $anio, '$corroceria', $estado)";
+                        VALUES ('$patente', '$fecha_alta', $marca_id, $color_id, '$motor', $modelo_id, $anio, '$corroceria', $estado)";
 
             if ($conn->query($sql) === TRUE) {
                 echo json_encode(["success" => true, "message" => "Vehículo agregado exitosamente"]);
@@ -62,13 +63,14 @@ switch ($method) {
         $data = json_decode(file_get_contents("php://input"), true);
 
         $id = $data['id'];
-        $patente = $data['patente'];
+        $patente = strtoupper($data['patente']);  // Convertir a mayúsculas
+        
         $marca_id = $data['marca_id'];
         $color_id = $data['color_id'];
-        $motor = $data['motor'];
+        $motor = strtoupper($data['motor']);  // Convertir a mayúsculas
         $modelo_id = $data['modelo_id'];
         $anio = $data['anio'];
-        $corroceria = $data['corroceria'];
+        $corroceria = strtoupper($data['corroceria']);  // Convertir a mayúsculas
 
         // Verificar si la patente ya existe en otro vehículo
         $sql_check = "SELECT id FROM vehiculos WHERE patente = '$patente' AND id != $id";
@@ -87,6 +89,7 @@ switch ($method) {
         }
         break;
 
+
     case 'DELETE':
         $data = json_decode(file_get_contents("php://input"), true);
         $id = $data['id'];
@@ -102,4 +105,3 @@ switch ($method) {
 }
 
 $conn->close();
-?>

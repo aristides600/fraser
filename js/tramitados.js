@@ -13,7 +13,7 @@ createApp({
     },
     methods: {
         cargarDatos() {
-            axios.get('api/documentos_tramitados.php', {
+            axios.get('api/tramitados.php', {
                 params: {
                     action: 'data'
                 }
@@ -28,7 +28,7 @@ createApp({
         },
         obtenerDocumentos() {
             if (this.patente.length > 0) {
-                axios.get('api/documentos_tramitados.php', {
+                axios.get('api/tramitados.php', {
                     params: {
                         action: 'data',
                         patente: this.patente

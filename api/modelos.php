@@ -14,11 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     echo json_encode($modelos);
     exit;
 }
-
 // Crear un nuevo modelo
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
-    $nombre = $data['nombre'];
+    $nombre = strtoupper($data['nombre']);  // Convertir a mayúsculas
     $marca_id = $data['marca_id'];
 
     // Verificar si el modelo ya existe
@@ -46,12 +45,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     exit;
 }
-
 // Actualizar un modelo
 if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     $data = json_decode(file_get_contents("php://input"), true);
     $id = $data['id'];
-    $nombre = $data['nombre'];
+    $nombre = strtoupper($data['nombre']);  // Convertir a mayúsculas
     $marca_id = $data['marca_id'];
 
     // Verificar si el modelo ya existe
@@ -80,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     exit;
 }
 
+
 // Eliminar un modelo
 // if ($_SERVER['REQUEST_METHOD'] === 'DELETE') {
 //     $data = json_decode(file_get_contents("php://input"), true);
@@ -96,4 +95,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 //     }
 //     exit;
 // }
-?>

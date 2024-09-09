@@ -46,6 +46,7 @@
             justify-content: center;
             gap: 20px;
             margin-top: 20px;
+            flex-wrap: wrap;
         }
 
         .card {
@@ -99,53 +100,45 @@
         </div>
 
         <!-- Menú de navegación -->
-        <nav class="navbar navbar-expand-lg navbar-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                    <li class="nav-item dropdown">
+                        <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="documentosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Documentos
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="vehiculosDropdown">
-                                <li><a class="dropdown-item" href="documentos.php">Pendientes</a></li>
-                                <li><a class="dropdown-item" href="documentos_tramitados.php">Tramitados</a></li>
-                              
+                            <ul class="dropdown-menu" aria-labelledby="documentosDropdown" data-bs-auto-close="outside">
+                                <li><a class="dropdown-item" href="documentos.php">Documentos</a></li>
+                                <li><a class="dropdown-item" href="tramitados.php">Tramitados</a></li>
                             </ul>
                         </li>
+
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="vehiculosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Vehículos
                             </a>
-                            <ul class="dropdown-menu" aria-labelledby="vehiculosDropdown">
+                            <ul class="dropdown-menu" aria-labelledby="vehiculosDropdown" data-bs-auto-close="outside">
                                 <li><a class="dropdown-item" href="vehiculos.php">Vehículos</a></li>
                                 <li><a class="dropdown-item" href="marcas.php">Marcas</a></li>
                                 <li><a class="dropdown-item" href="modelos.php">Modelos</a></li>
                                 <li><a class="dropdown-item" href="colores.php">Colores</a></li>
                             </ul>
                         </li>
-                        <!-- <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="usuariosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Usuarios
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="usuariosDropdown">
-                                <li><a class="dropdown-item" href="usuarios.php">Usuarios</a></li>
-                            </ul>
-                        </li> -->
+                        
                     </ul>
-                    <form class="d-flex ms-auto">
-                        <!-- Botón de cerrar sesión -->
-                        <button class="logout-button" type="submit" formaction="logout.php" method="POST">
-                            <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
-                        </button>
-                        <!-- Botón de cambiar contraseña -->
-                        <button class="change-password-button ms-3" type="button" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-                            <i class="bi bi-key-fill"></i>
-                        </button>
-                    </form>
+
+                    <!-- Botón de cerrar sesión -->
+                    <a href="logout.php" class="logout-button ms-auto">
+                        <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+                    </a>
+                    <!-- Botón de cambiar contraseña -->
+                    <button class="change-password-button ms-3" type="button" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                        <i class="bi bi-key-fill"></i>
+                    </button>
                 </div>
             </div>
         </nav>
