@@ -39,8 +39,8 @@ switch ($method) {
         $usuario_id = $_SESSION['user_id'];
         $estado = 1;
 
-        // Verificar si ya existe un documento para este vehículo y tipo
-        $checkQuery = "SELECT id FROM documentos WHERE vehiculo_id = ? AND tipo_id = ?";
+        // Verificar si ya existe un documento para este vehículo y tipo, excluyendo aquellos con estado = 0
+        $checkQuery = "SELECT id FROM documentos WHERE vehiculo_id = ? AND tipo_id = ? AND estado != 0";
         $checkStmt = $conn->prepare($checkQuery);
         $checkStmt->bind_param('ii', $vehiculo_id, $tipo_id);
         $checkStmt->execute();
@@ -72,8 +72,8 @@ switch ($method) {
         $fecha_vencimiento = $conn->real_escape_string($input['fecha_vencimiento']);
         $observacion = $conn->real_escape_string($input['observacion']);
 
-        // Verificar si ya existe un documento para este vehículo y tipo
-        $checkQuery = "SELECT id FROM documentos WHERE vehiculo_id = ? AND tipo_id = ? AND id != ?";
+        // Verificar si ya existe un documento para este vehículo y tipo, excluyendo aquellos con estado = 0
+        $checkQuery = "SELECT id FROM documentos WHERE vehiculo_id = ? AND tipo_id = ? AND id != ? AND estado != 0";
         $checkStmt = $conn->prepare($checkQuery);
         $checkStmt->bind_param('iii', $vehiculo_id, $tipo_id, $id);
         $checkStmt->execute();
