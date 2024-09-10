@@ -18,8 +18,8 @@ switch ($method) {
                 JOIN modelos mo ON v.modelo_id = mo.id
                 JOIN tipos t ON d.tipo_id = t.id
                 JOIN usuarios u ON d.usuario_id = u.id
-
-                JOIN colores c ON v.color_id = c.id WHERE d.estado = 1
+                JOIN colores c ON v.color_id = c.id 
+                WHERE d.estado = 1
                 ORDER BY d.fecha_vencimiento ASC";
         $result = $conn->query($sql);
         $documentos = [];
@@ -39,52 +39,65 @@ switch ($method) {
         $usuario_id = $_SESSION['user_id'];
         $estado = 1;
 
-        $sql = "INSERT INTO documentos (vehiculo_id, tipo_id, fecha_alta, fecha_vencimiento, observacion, usuario_id, estado)
-                VALUES (?, ?, NOW(), ?, ?, ?, ?)";
+        // Verificar si ya existe un documento para este vehículo y tipo
+        $checkQuery = "SELECT id FROM documentos WHERE vehiculo_id = ? AND tipo_id = ?";
+        $checkStmt = $conn->prepare($checkQuery);
+        $checkStmt->bind_param('ii', $vehiculo_id, $tipo_id);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result();
 
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("iisssi", $vehiculo_id, $tipo_id, $fecha_vencimiento, $observacion, $usuario_id, $estado);
-
-        if ($stmt->execute()) {
-            echo json_encode(["message" => "Documento agregado con éxito"]);
+        if ($result->num_rows > 0) {
+            // Si existe, devolver un error 409 (conflicto)
+            http_response_code(409);
+            echo json_encode(['message' => 'Ya existe un documento de este tipo para el vehículo seleccionado']);
         } else {
-            echo json_encode(["message" => "Error al agregar el documento"]);
+            $sql = "INSERT INTO documentos (vehiculo_id, tipo_id, fecha_alta, fecha_vencimiento, observacion, usuario_id, estado)
+                    VALUES (?, ?, NOW(), ?, ?, ?, ?)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("iisssi", $vehiculo_id, $tipo_id, $fecha_vencimiento, $observacion, $usuario_id, $estado);
+
+            if ($stmt->execute()) {
+                echo json_encode(["message" => "Documento agregado con éxito"]);
+            } else {
+                echo json_encode(["message" => "Error al agregar el documento"]);
+            }
+            $stmt->close();
         }
-        $stmt->close();
         break;
 
     case 'PUT':
         $id = $conn->real_escape_string($input['id']);
+        $vehiculo_id = $conn->real_escape_string($input['vehiculo_id']);
         $tipo_id = $conn->real_escape_string($input['tipo_id']);
         $fecha_vencimiento = $conn->real_escape_string($input['fecha_vencimiento']);
         $observacion = $conn->real_escape_string($input['observacion']);
 
-        $sql = "UPDATE documentos SET tipo_id = '$tipo_id', fecha_vencimiento = '$fecha_vencimiento', observacion = '$observacion'
-                WHERE id = '$id'";
-        if ($conn->query($sql) === TRUE) {
-            echo json_encode(['message' => 'Documento editado correctamente']);
+        // Verificar si ya existe un documento para este vehículo y tipo
+        $checkQuery = "SELECT id FROM documentos WHERE vehiculo_id = ? AND tipo_id = ? AND id != ?";
+        $checkStmt = $conn->prepare($checkQuery);
+        $checkStmt->bind_param('iii', $vehiculo_id, $tipo_id, $id);
+        $checkStmt->execute();
+        $result = $checkStmt->get_result();
+
+        if ($result->num_rows > 0) {
+            // Si existe, devolver un error 409 (conflicto)
+            http_response_code(409);
+            echo json_encode(['message' => 'Ya existe un documento de este tipo para el vehículo seleccionado']);
         } else {
-            http_response_code(500);
-            echo json_encode(['message' => 'Error al editar el documento']);
+            $sql = "UPDATE documentos SET tipo_id = ?, fecha_vencimiento = ?, observacion = ?
+                    WHERE id = ?";
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param('sssi', $tipo_id, $fecha_vencimiento, $observacion, $id);
+
+            if ($stmt->execute()) {
+                echo json_encode(['message' => 'Documento editado correctamente']);
+            } else {
+                http_response_code(500);
+                echo json_encode(['message' => 'Error al editar el documento']);
+            }
+            $stmt->close();
         }
         break;
-
-        // case 'DELETE':
-        //     // Capturamos el input enviado en la solicitud DELETE
-        //     $input = json_decode(file_get_contents('php://input'), true);
-        //     $id = $conn->real_escape_string($input['id']);
-        //     $estado = $conn->real_escape_string($input['estado']) ? 1 : 0;
-
-        //     // Actualizamos el estado del documento en la base de datos
-        //     $sql = "UPDATE documentos SET estado = $estado WHERE id = $id";
-
-        //     if ($conn->query($sql) === TRUE) {
-        //         echo json_encode(['success' => true, 'message' => 'Documento tramitado con éxito.']);
-        //     } else {
-        //         echo json_encode(['success' => false, 'message' => 'Error al tramitar el documento.']);
-        //     }
-        //     break;
-
 
     default:
         http_response_code(405);

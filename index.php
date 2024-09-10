@@ -116,7 +116,6 @@
                                 <li><a class="dropdown-item" href="tramitados.php">Tramitados</a></li>
                             </ul>
                         </li>
-
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="vehiculosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Vehículos

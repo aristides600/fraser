@@ -47,6 +47,25 @@ createApp({
           });
         });
     },
+    // grabarDocumento() {
+    //   axios.put('api/documentos.php', this.documento)
+    //     .then(response => {
+    //       Swal.fire({
+    //         icon: 'success',
+    //         title: 'Éxito',
+    //         text: 'Documento editado correctamente',
+    //         showConfirmButton: false,
+    //         timer: 1500
+    //       });
+    //     })
+    //     .catch(error => {
+    //       Swal.fire({
+    //         icon: 'error',
+    //         title: 'Error',
+    //         text: 'Error al editar el documento: ' + error,
+    //       });
+    //     });
+    // }
     grabarDocumento() {
       axios.put('api/documentos.php', this.documento)
         .then(response => {
@@ -57,15 +76,36 @@ createApp({
             showConfirmButton: false,
             timer: 1500
           });
+          // Puedes limpiar el formulario o realizar otras acciones aquí
         })
         .catch(error => {
+          // Manejo detallado del error
+          let errorMessage = 'Error al editar el documento.';
+          if (error.response) {
+            // El servidor respondió con un código de estado fuera del rango 2xx
+            if (error.response.status === 409) {
+              errorMessage = 'Documento duplicado: ya existe un documento de este tipo para el vehículo seleccionado.';
+            } else if (error.response.status === 400) {
+              errorMessage = 'Datos incompletos o incorrectos. Por favor, revisa el formulario.';
+            } else {
+              errorMessage = 'Error del servidor: ' + error.response.data.message || errorMessage;
+            }
+          } else if (error.request) {
+            // La solicitud fue hecha pero no hubo respuesta
+            errorMessage = 'No se recibió respuesta del servidor. Por favor, verifica tu conexión.';
+          } else {
+            // Ocurrió un error al configurar la solicitud
+            errorMessage = 'Error al configurar la solicitud: ' + error.message;
+          }
+
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: 'Error al editar el documento: ' + error,
+            text: errorMessage,
           });
         });
     }
+
   }
 }).mount('#app');
 

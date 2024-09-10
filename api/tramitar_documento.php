@@ -4,21 +4,28 @@ header('Content-Type: application/json');
 
 session_start();
 
+// Verificar si el usuario está autenticado
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'message' => 'Usuario no autenticado']);
     exit;
 }
 
+// Verificar el método de la solicitud
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     echo json_encode(['success' => false, 'message' => 'Método no permitido']);
     exit;
 }
 
+// Establecer la zona horaria
+date_default_timezone_set('America/Argentina/Buenos_Aires');
+$fecha_tramite = date('Y-m-d H:i:s'); // Fecha y hora actual
+
+// Obtener los datos de la solicitud
 $documento_id = $_POST['documento_id'] ?? null;
 $usuario_id = $_SESSION['user_id'];
-$fecha_tramite = date('Y-m-d H:i:s');
 $observacion = $_POST['observacion'] ?? null;
 
+// Verificar si los datos necesarios están presentes
 if (!empty($documento_id) && !empty($usuario_id) && !empty($observacion)) {
     // Iniciar una transacción para asegurar la atomicidad de las operaciones
     $conn->begin_transaction();
@@ -69,4 +76,6 @@ if (!empty($documento_id) && !empty($usuario_id) && !empty($observacion)) {
     echo json_encode(['success' => false, 'error' => 'Datos incompletos']);
 }
 
+// Cerrar la conexión a la base de datos
 $conn->close();
+?>

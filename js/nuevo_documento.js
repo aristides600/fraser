@@ -73,14 +73,38 @@ createApp({
           };
         })
         .catch(error => {
-          console.error(error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Hubo un error al agregar el documento',
-            text: error.message
-          });
+          if (error.response) {
+            if (error.response.status === 409) {
+              Swal.fire({
+                icon: 'warning',
+                title: 'Documento duplicado',
+                text: error.response.data.message
+              });
+            } else if (error.response.status === 400) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Datos incompletos o incorrectos',
+                text: error.response.data.message
+              });
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Hubo un error al agregar el documento',
+                text: error.response.data.message
+              });
+            }
+          } else {
+            console.error(error);
+            Swal.fire({
+              icon: 'error',
+              title: 'Error de conexión',
+              text: error.message
+            });
+          }
         });
     }
+
+
   },
   mounted() {
     this.cargarTipos();

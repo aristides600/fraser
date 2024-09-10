@@ -13,7 +13,7 @@ createApp({
             axios.get('api/documentos.php')
                 .then(response => {
                     console.log(response.data); // Verifica los datos recibidos
-    
+
                     // Agrupamos los documentos por id
                     const documentosAgrupados = response.data.reduce((acc, doc) => {
                         // Si el id ya está en el acumulador, agregamos el color
@@ -24,27 +24,27 @@ createApp({
                         }
                         return acc;
                     }, {});
-    
+
                     // Convertimos el objeto agrupado en un array
                     let documentos = Object.values(documentosAgrupados);
-    
+
                     // Filtramos los documentos por patente si se ha ingresado alguna patente
                     if (this.patente.trim() !== '') {
                         documentos = documentos.filter(doc => doc.patente.toLowerCase().includes(this.patente.toLowerCase()));
                     }
-    
+
                     // Si no se encuentran coincidencias, mostrar un mensaje
                     this.sinCoincidencias = documentos.length === 0;
-    
+
                     // Ordenamos los documentos por fecha de vencimiento
                     documentos.sort((a, b) => new Date(a.fecha_vencimiento) - new Date(b.fecha_vencimiento));
-    
+
                     // Procesamos los datos para incluir el estado y la clase CSS
                     this.documentos = documentos.map(doc => {
                         const hoy = new Date();
                         const fechaVencimiento = new Date(doc.fecha_vencimiento);
                         const diferenciaDias = (fechaVencimiento - hoy) / (1000 * 60 * 60 * 24);
-    
+
                         return {
                             ...doc,
                             diasPorVencer: Math.ceil(diferenciaDias),
@@ -113,24 +113,12 @@ createApp({
                 }
             });
         },
-
-
-
         nuevoDocumento() {
             window.location.href = "nuevo_documento.php";
         },
 
     },
-    computed: {
-        // Filtrar los documentos pendientes
-        documentosPendientes() {
-            return this.documentos.filter(doc => doc.estado === 1);
-        },
-        // Filtrar los documentos tramitados
-        documentosTramitados() {
-            return this.documentos.filter(doc => doc.estado === 0);
-        }
-    },
+
     mounted() {
         this.obtenerDocumentos();
     }
