@@ -116,6 +116,17 @@ createApp({
         nuevoDocumento() {
             window.location.href = "nuevo_documento.php";
         },
+        // Método en Vue para enviar recordatorios
+        sendReminderEmails() {
+            axios.post('api/enviar_recordatorios.php')
+                .then(response => {
+                    Swal.fire('Enviado', 'Recordatorios enviados con éxito.', 'success');
+                })
+                .catch(error => {
+                    Swal.fire('Error', 'Hubo un problema al enviar los recordatorios.', 'error');
+                });
+        }
+
 
     },
 

@@ -108,7 +108,7 @@
                                 <input type="number" class="form-control" id="anio" v-model="vehiculo.anio" required>
                             </div>
                             <div class="mb-3">
-                                <label for="corroceria" class="form-label">Corrocería</label>
+                                <label for="corroceria" class="form-label">Carrocería</label>
                                 <input type="text" class="form-control" id="corroceria" v-model="vehiculo.corroceria" required>
                             </div>
                             <!-- <div class="mb-3">

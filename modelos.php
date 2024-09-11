@@ -32,7 +32,7 @@
         <table class="table mt-5">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <!-- <th>ID</th> -->
                     <th>Modelo</th>
                     <th>Marca</th>
                     <th>Acciones</th>
@@ -40,11 +40,12 @@
             </thead>
             <tbody>
                 <tr v-for="modelo in modelos" :key="modelo.id">
-                    <td>{{ modelo.id }}</td>
+                    <!-- <td>{{ modelo.id }}</td> -->
                     <td>{{ modelo.nombre }}</td>
                     <td>{{ modelo.marca_nombre }}</td>
                     <td>
-                        <button class="btn btn-warning btn-sm" @click="editarModelo(modelo)">Editar</button>
+                        <!-- <button class="btn btn-warning btn-sm" @click="editarModelo(modelo)">Editar</button> -->
+                        <button class="btn btn-warning" @click="editarModelo(modelo)"><i class="bi bi-pencil"></i></button>
                         <!-- <button class="btn btn-danger btn-sm" @click="eliminarModelo(modelo.id)">Eliminar</button> -->
                     </td>
                 </tr>

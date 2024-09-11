@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,8 +10,9 @@
     <link rel="stylesheet" href="./css/estilos.css">
 
 </head>
+
 <body>
-<?php include 'header.php'; ?>
+    <?php include 'header.php'; ?>
 
     <div id="app" class="container mt-5">
         <h1 class="mb-4">Gestión de Colores</h1>
@@ -25,21 +27,23 @@
         <table class="table mt-4">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <!-- <th>ID</th> -->
                     <th>Nombre</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="color in colores" :key="color.id">
-                    <td>{{ color.id }}</td>
+                    <!-- <td>{{ color.id }}</td> -->
                     <td>
                         <input type="text" class="form-control" v-model="color.nombre">
                     </td>
                     <td>
-                        <button class="btn btn-success" @click="updateColor(color)">Actualizar</button>
+                        <button class="btn btn-warning" @click="updateColor(color)"><i class="bi bi-arrow-clockwise"></i>Actualizar</button>
+                       
                         <!-- <button class="btn btn-danger" @click="deleteColor(color.id)">Eliminar</button> -->
                     </td>
+
                 </tr>
             </tbody>
         </table>
@@ -55,4 +59,5 @@
     <?php include 'footer.php'; ?>
 
 </body>
+
 </html>

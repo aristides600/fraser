@@ -12,7 +12,7 @@
 </head>
 
 <body>
-<?php include 'header.php'; ?>
+    <?php include 'header.php'; ?>
 
     <div id="app" class="container mt-5">
         <h1 class="mb-4">Gestión de Marcas</h1>
@@ -27,20 +27,24 @@
         <table class="table mt-4">
             <thead>
                 <tr>
-                    <th>ID</th>
+                    <!-- <th>ID</th> -->
                     <th>Nombre</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 <tr v-for="marca in marcas" :key="marca.id">
-                    <td>{{ marca.id }}</td>
+                    <!-- <td>{{ marca.id }}</td> -->
                     <td>
                         <input type="text" class="form-control" v-model="marca.nombre">
                     </td>
                     <td>
-                        <button class="btn btn-success" @click="updateMarca(marca)">Actualizar</button>
-                        <button class="btn btn-danger" @click="deleteMarca(marca.id)">Eliminar</button>
+                        <!-- <button class="btn btn-warning" @click="updateMarca(marca)">Actualizar</button> -->
+                        <button class="btn btn-warning" @click="updateMarca(marca)">
+                            <i class="bi bi-arrow-clockwise"></i> Actualizar
+                        </button>
+
+                        <!-- <button class="btn btn-danger" @click="deleteMarca(marca.id)">Eliminar</button> -->
                     </td>
                 </tr>
             </tbody>
