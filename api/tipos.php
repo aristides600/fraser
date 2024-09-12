@@ -2,16 +2,14 @@
 require_once 'db.php';
 header('Content-Type: application/json');
 
+// Obtener todos los tipos
 $sql = "SELECT id, nombre FROM tipos";
-$result = $conn->query($sql);
+$stmt = $conn->prepare($sql);
+$stmt->execute();
 
-$tipos = [];
-
-while ($row = $result->fetch_assoc()) {
-  $tipos[] = $row;
-}
+$tipos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 echo json_encode($tipos);
 
-$conn->close();
+$conn = null; // Cierra la conexión
 ?>

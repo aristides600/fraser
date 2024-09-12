@@ -10,13 +10,7 @@ require 'C:/xampp/htdocs/documentacion/PHPMailer-master/src/Exception.php';
 require 'C:/xampp/htdocs/documentacion/PHPMailer-master/src/PHPMailer.php';
 require 'C:/xampp/htdocs/documentacion/PHPMailer-master/src/SMTP.php';
 
-
 // Conexión a la base de datos
-// $host = 'localhost';
-// $user = 'root';
-// $pass = '';
-// $db = 'fraser';
-
 $conn = new mysqli($host, $user, $pass, $db);
 
 // Verificar conexión
@@ -39,43 +33,60 @@ if ($result->num_rows > 0) {
     $mail = new PHPMailer(true);
 
     try {
+        // Activar el modo de depuración (opcional)
+        $mail->SMTPDebug = SMTP::DEBUG_SERVER; // Cambiar a SMTP::DEBUG_OFF para desactivar depuración
+        $mail->Debugoutput = 'html'; // Output en formato HTML para depuración
+
         // Configuración del servidor SMTP
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com'; // Servidor SMTP de Gmail
         $mail->SMTPAuth = true;
         $mail->Username = 'aristides600@gmail.com'; // Tu correo de Gmail
-        $mail->Password = 'Casa2020'; // Tu contraseña de aplicación
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-        $mail->Port = 587;
+        $mail->Password = 'jonlemfqbzivrwol'; // Tu contraseña de aplicación
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Encriptación STARTTLS
+        $mail->Port = 587; // Puerto SMTP para STARTTLS
+
+        // Opciones para manejar certificados SSL (en caso de problemas con el certificado)
+        $mail->SMTPOptions = array(
+            'ssl' => array(
+                'verify_peer' => false,
+                'verify_peer_name' => false,
+                'allow_self_signed' => true
+            )
+        );
 
         // Configuración del remitente
         $mail->setFrom('aristides600@gmail.com', 'Transporte Fraser');
-
-        // Destinatario: aristides600@hotmail.com
-        $mail->addAddress('aristides600@hotmail.com'); 
 
         // Recorrer documentos y enviar correos
         while ($documento = $result->fetch_assoc()) {
             $mail->clearAddresses(); // Limpiar destinatarios anteriores
 
-            // Destinatario
-            $mail->addAddress($documento['email']); // Usa el email desde la consulta SQL
+            // Destinatario dinámico (desde la consulta SQL)
+            $mail->addAddress($documento['email']); 
 
             // Contenido del correo
-            $mail->isHTML(true);
+            $mail->isHTML(true); // Establecer que el correo sea en formato HTML
             $mail->Subject = 'Recordatorio: Documento Próximo a Vencer';
             $mail->Body = 'Hola, el documento del vehículo con patente <strong>' . $documento['patente'] . '</strong> vencerá el <strong>' . $documento['fecha_vencimiento'] . '</strong>. Por favor, asegúrate de renovarlo a tiempo.';
             $mail->AltBody = 'Hola, el documento del vehículo con patente ' . $documento['patente'] . ' vencerá el ' . $documento['fecha_vencimiento'] . '.';
 
-            // Enviar correo
+            // Intentar enviar el correo
             if ($mail->send()) {
                 // Actualizar el campo recordatorio_enviado
                 $update_sql = "UPDATE documentos SET recordatorio_enviado = 1 WHERE id = " . $documento['id'];
-                $conn->query($update_sql);
+                if ($conn->query($update_sql) === TRUE) {
+                    echo "Documento ID: " . $documento['id'] . " actualizado correctamente.<br>";
+                } else {
+                    echo "Error al actualizar documento ID: " . $documento['id'] . ": " . $conn->error . "<br>";
+                }
+            } else {
+                // Mostrar error de envío de correo
+                echo "Error al enviar correo para el documento ID: " . $documento['id'] . " - " . $mail->ErrorInfo . "<br>";
             }
         }
 
-        echo "Recordatorios enviados con éxito.";
+        echo "Proceso completado.";
     } catch (Exception $e) {
         echo "Error al enviar correos: {$mail->ErrorInfo}";
     }
@@ -83,5 +94,6 @@ if ($result->num_rows > 0) {
     echo "No hay documentos por vencer en los próximos 7 días.";
 }
 
+// Cerrar conexión a la base de datos
 $conn->close();
 ?>

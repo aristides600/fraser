@@ -16,12 +16,10 @@ switch ($method) {
                 JOIN marcas m ON v.marca_id = m.id 
                 JOIN colores c ON v.color_id = c.id 
                 JOIN modelos mo ON v.modelo_id = mo.id";
-        $result = $conn->query($sql);
-
-        $vehiculos = [];
-        while ($row = $result->fetch_assoc()) {
-            $vehiculos[] = $row;
-        }
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $vehiculos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
         echo json_encode($vehiculos);
         break;
 
@@ -31,30 +29,41 @@ switch ($method) {
         $data = json_decode(file_get_contents("php://input"), true);
 
         $patente = strtoupper($data['patente']);  // Convertir a mayúsculas
-
-        $fecha_alta = date('Y-m-d');  // Asegura que la fecha esté formateada correctamente
+        $fecha_alta = date('Y-m-d');
         $marca_id = $data['marca_id'];
         $color_id = $data['color_id'];
-        $motor = strtoupper($data['motor']);  // Convertir a mayúsculas
+        $motor = strtoupper($data['motor']);  
         $modelo_id = $data['modelo_id'];
         $anio = $data['anio'];
-        $corroceria = strtoupper($data['corroceria']);  // Convertir a mayúsculas
+        $corroceria = strtoupper($data['corroceria']);
         $estado = 1;
 
         // Verificar si la patente ya existe
-        $sql_check = "SELECT id FROM vehiculos WHERE patente = '$patente'";
-        $result_check = $conn->query($sql_check);
+        $sql_check = "SELECT id FROM vehiculos WHERE patente = :patente";
+        $stmt_check = $conn->prepare($sql_check);
+        $stmt_check->bindParam(':patente', $patente);
+        $stmt_check->execute();
 
-        if ($result_check->num_rows > 0) {
+        if ($stmt_check->rowCount() > 0) {
             echo json_encode(["success" => false, "message" => "Error: La patente ya existe en otro vehículo."]);
         } else {
             $sql = "INSERT INTO vehiculos (patente, fecha_alta, marca_id, color_id, motor, modelo_id, anio, corroceria, estado) 
-                        VALUES ('$patente', '$fecha_alta', $marca_id, $color_id, '$motor', $modelo_id, $anio, '$corroceria', $estado)";
+                    VALUES (:patente, :fecha_alta, :marca_id, :color_id, :motor, :modelo_id, :anio, :corroceria, :estado)";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':patente', $patente);
+            $stmt->bindParam(':fecha_alta', $fecha_alta);
+            $stmt->bindParam(':marca_id', $marca_id);
+            $stmt->bindParam(':color_id', $color_id);
+            $stmt->bindParam(':motor', $motor);
+            $stmt->bindParam(':modelo_id', $modelo_id);
+            $stmt->bindParam(':anio', $anio);
+            $stmt->bindParam(':corroceria', $corroceria);
+            $stmt->bindParam(':estado', $estado);
 
-            if ($conn->query($sql) === TRUE) {
+            if ($stmt->execute()) {
                 echo json_encode(["success" => true, "message" => "Vehículo agregado exitosamente"]);
             } else {
-                echo json_encode(["success" => false, "message" => "Error al agregar vehículo: " . $conn->error]);
+                echo json_encode(["success" => false, "message" => "Error al agregar vehículo"]);
             }
         }
         break;
@@ -63,45 +72,59 @@ switch ($method) {
         $data = json_decode(file_get_contents("php://input"), true);
 
         $id = $data['id'];
-        $patente = strtoupper($data['patente']);  // Convertir a mayúsculas
-        
+        $patente = strtoupper($data['patente']);
         $marca_id = $data['marca_id'];
         $color_id = $data['color_id'];
-        $motor = strtoupper($data['motor']);  // Convertir a mayúsculas
+        $motor = strtoupper($data['motor']);
         $modelo_id = $data['modelo_id'];
         $anio = $data['anio'];
-        $corroceria = strtoupper($data['corroceria']);  // Convertir a mayúsculas
+        $corroceria = strtoupper($data['corroceria']);
 
         // Verificar si la patente ya existe en otro vehículo
-        $sql_check = "SELECT id FROM vehiculos WHERE patente = '$patente' AND id != $id";
-        $result_check = $conn->query($sql_check);
+        $sql_check = "SELECT id FROM vehiculos WHERE patente = :patente AND id != :id";
+        $stmt_check = $conn->prepare($sql_check);
+        $stmt_check->bindParam(':patente', $patente);
+        $stmt_check->bindParam(':id', $id);
+        $stmt_check->execute();
 
-        if ($result_check->num_rows > 0) {
+        if ($stmt_check->rowCount() > 0) {
             echo json_encode(["success" => false, "message" => "Error: La patente ya existe en otro vehículo."]);
         } else {
-            $sql = "UPDATE vehiculos SET patente='$patente', marca_id=$marca_id, color_id=$color_id, motor='$motor', modelo_id=$modelo_id, anio=$anio, corroceria='$corroceria' WHERE id=$id";
+            $sql = "UPDATE vehiculos 
+                    SET patente = :patente, marca_id = :marca_id, color_id = :color_id, motor = :motor, modelo_id = :modelo_id, anio = :anio, corroceria = :corroceria 
+                    WHERE id = :id";
+            $stmt = $conn->prepare($sql);
+            $stmt->bindParam(':patente', $patente);
+            $stmt->bindParam(':marca_id', $marca_id);
+            $stmt->bindParam(':color_id', $color_id);
+            $stmt->bindParam(':motor', $motor);
+            $stmt->bindParam(':modelo_id', $modelo_id);
+            $stmt->bindParam(':anio', $anio);
+            $stmt->bindParam(':corroceria', $corroceria);
+            $stmt->bindParam(':id', $id);
 
-            if ($conn->query($sql) === TRUE) {
+            if ($stmt->execute()) {
                 echo json_encode(["success" => true, "message" => "Vehículo actualizado exitosamente"]);
             } else {
-                echo json_encode(["success" => false, "message" => "Error al actualizar vehículo: " . $conn->error]);
+                echo json_encode(["success" => false, "message" => "Error al actualizar vehículo"]);
             }
         }
         break;
-
 
     case 'DELETE':
         $data = json_decode(file_get_contents("php://input"), true);
         $id = $data['id'];
 
-        $sql = "UPDATE vehiculos SET estado = 0 WHERE id = $id";
+        $sql = "UPDATE vehiculos SET estado = 0 WHERE id = :id";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':id', $id);
 
-        if ($conn->query($sql) === TRUE) {
+        if ($stmt->execute()) {
             echo json_encode(["success" => true, "message" => "Vehículo marcado como eliminado exitosamente"]);
         } else {
-            echo json_encode(["success" => false, "message" => "Error al eliminar vehículo: " . $conn->error]);
+            echo json_encode(["success" => false, "message" => "Error al eliminar vehículo"]);
         }
         break;
 }
 
-$conn->close();
+$conn = null;  // Cerrar conexión

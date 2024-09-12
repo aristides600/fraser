@@ -1,71 +1,78 @@
 <?php
+require_once 'db.php';
 header('Content-Type: application/json');
-include 'db.php';
 
-function usuarioExists($campo, $valor) {
-    global $pdo;
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM usuarios WHERE $campo = ?");
-    $stmt->execute([$valor]);
-    return $stmt->fetchColumn() > 0;
-}
+// Obtener la solicitud
+$method = $_SERVER['REQUEST_METHOD'];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (isset($_POST['create'])) {
-        $dni = $_POST['dni'];
-        $apellido = $_POST['apellido'];
-        $nombre = $_POST['nombre'];
-        $usuario = $_POST['usuario'];
-        $clave = password_hash($_POST['clave'], PASSWORD_BCRYPT);
-        $rol_id = $_POST['rol_id'];
-        $estado = 1;
+// Leer el cuerpo de la solicitud
+$input = json_decode(file_get_contents("php://input"), true);
 
-        // Verificar duplicados
-        if (usuarioExists('dni', $dni)) {
-            echo json_encode(['error' => 'El DNI ya está registrado.']);
-            exit;
-        }
-        if (usuarioExists('usuario', $usuario)) {
-            echo json_encode(['error' => 'El usuario ya está registrado.']);
-            exit;
-        }
+try {
+    switch ($method) {
+        case 'GET':
+            // Listar usuarios
+            $stmt = $conn->prepare("SELECT u.id, u.dni, u.apellido, u.nombre, u.usuario, u.estado, u.rol_id, r.nombre as rol FROM usuarios u JOIN roles r ON u.rol_id = r.id");
+            $stmt->execute();
+            $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            echo json_encode($usuarios);
+            break;
 
-        $stmt = $pdo->prepare("INSERT INTO usuarios (dni, apellido, nombre, usuario, clave, rol_id, estado) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        if ($stmt->execute([$dni, $apellido, $nombre, $usuario, $clave, $rol_id, $estado])) {
-            echo json_encode(['success' => 'Usuario creado exitosamente.']);
-        } else {
-            echo json_encode(['error' => 'Error al crear el usuario.']);
-        }
+        case 'POST':
+            // Crear usuario
+            $dni = $input['dni'];
+            $apellido = $input['apellido'];
+            $nombre = $input['nombre'];
+            $usuario = $input['usuario'];
+            $clave = password_hash($input['clave'], PASSWORD_BCRYPT);
+            $rol_id = $input['rol_id'];
+            $estado = $input['estado'];
+
+            // Verificar si el usuario o DNI ya existe
+            $stmt = $conn->prepare("SELECT COUNT(*) FROM usuarios WHERE dni = ? OR usuario = ?");
+            $stmt->execute([$dni, $usuario]);
+            if ($stmt->fetchColumn() > 0) {
+                http_response_code(409); // Conflict
+                echo json_encode(['error' => 'Usuario o DNI ya existe']);
+                exit;
+            }
+
+            $stmt = $conn->prepare("INSERT INTO usuarios (dni, apellido, nombre, usuario, clave, rol_id, estado) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$dni, $apellido, $nombre, $usuario, $clave, $rol_id, $estado]);
+
+            echo json_encode(['message' => 'Usuario creado con éxito']);
+            break;
+
+        case 'PUT':
+            // Editar usuario
+            $id = $_GET['id'];
+            $dni = $input['dni'];
+            $apellido = $input['apellido'];
+            $nombre = $input['nombre'];
+            $usuario = $input['usuario'];
+            $rol_id = $input['rol_id'];
+            $estado = $input['estado'];
+
+            $stmt = $conn->prepare("UPDATE usuarios SET dni = ?, apellido = ?, nombre = ?, usuario = ?, rol_id = ?, estado = ? WHERE id = ?");
+            $stmt->execute([$dni, $apellido, $nombre, $usuario, $rol_id, $estado, $id]);
+
+            echo json_encode(['message' => 'Usuario actualizado con éxito']);
+            break;
+
+        case 'DELETE':
+            // Eliminar usuario
+            $id = $_GET['id'];
+            $stmt = $conn->prepare("DELETE FROM usuarios WHERE id = ?");
+            $stmt->execute([$id]);
+            echo json_encode(['message' => 'Usuario eliminado con éxito']);
+            break;
+
+        default:
+            http_response_code(405); // Method Not Allowed
+            echo json_encode(['error' => 'Método no permitido']);
+            break;
     }
-    elseif (isset($_POST['update'])) {
-        $id = $_POST['id'];
-        $dni = $_POST['dni'];
-        $apellido = $_POST['apellido'];
-        $nombre = $_POST['nombre'];
-        $usuario = $_POST['usuario'];
-        $rol_id = $_POST['rol_id'];
-
-        $stmt = $pdo->prepare("UPDATE usuarios SET dni = ?, apellido = ?, nombre = ?, usuario = ?, rol_id = ? WHERE id = ?");
-        if ($stmt->execute([$dni, $apellido, $nombre, $usuario, $rol_id, $id])) {
-            echo json_encode(['success' => 'Usuario actualizado exitosamente.']);
-        } else {
-            echo json_encode(['error' => 'Error al actualizar el usuario.']);
-        }
-    }
-    elseif (isset($_POST['delete'])) {
-        $id = $_POST['id'];
-
-        $stmt = $pdo->prepare("DELETE FROM usuarios WHERE id = ?");
-        if ($stmt->execute([$id])) {
-            echo json_encode(['success' => 'Usuario eliminado exitosamente.']);
-        } else {
-            echo json_encode(['error' => 'Error al eliminar el usuario.']);
-        }
-    }
+} catch (PDOException $e) {
+    http_response_code(500); // Internal Server Error
+    echo json_encode(['error' => 'Error en la base de datos: ' . $e->getMessage()]);
 }
-
-if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    $stmt = $pdo->query("SELECT * FROM usuarios");
-    $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    echo json_encode($usuarios);
-}
-?>

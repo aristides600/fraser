@@ -1,6 +1,6 @@
 <?php
 // Conexión a la base de datos
-include 'db.php';
+require_once 'db.php'; // Asegúrate de que este archivo contenga la conexión PDO
 
 if (isset($_GET['action'])) {
     if ($_GET['action'] == 'data') {
@@ -18,32 +18,37 @@ if (isset($_GET['action'])) {
             JOIN usuarios u ON td.usuario_id = u.id
             JOIN tipos t ON d.tipo_id = t.id
         ";
-        
-        if ($patente !== '') {
-            $query .= " WHERE v.patente LIKE ?";
-        }
-
-        $stmt = $conn->prepare($query);
 
         if ($patente !== '') {
-            $stmt->bind_param('s', $patenteLike);
-            $patenteLike = "%$patente%";
+            $query .= " WHERE v.patente LIKE :patente";
         }
 
-        $stmt->execute();
-        $result = $stmt->get_result();
+        try {
+            // Preparar la declaración
+            $stmt = $conn->prepare($query);
 
-        $data = array();
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $data[] = $row;
+            if ($patente !== '') {
+                // Bind del parámetro
+                $patenteLike = "%$patente%";
+                $stmt->bindParam(':patente', $patenteLike, PDO::PARAM_STR);
             }
+
+            // Ejecutar la consulta
+            $stmt->execute();
+
+            // Obtener los resultados
+            $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            // Devolver los resultados como JSON
+            echo json_encode($data);
+        } catch (PDOException $e) {
+            // Manejo de errores
+            echo json_encode(['success' => false, 'message' => 'Error en la consulta: ' . $e->getMessage()]);
         }
-        echo json_encode($data);
     }
 
     // Cerrar la conexión a la base de datos
-    $conn->close();
+    $conn = null;
     exit;
 }
 ?>

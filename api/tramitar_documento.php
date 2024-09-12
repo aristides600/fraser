@@ -28,48 +28,38 @@ $observacion = $_POST['observacion'] ?? null;
 // Verificar si los datos necesarios están presentes
 if (!empty($documento_id) && !empty($usuario_id) && !empty($observacion)) {
     // Iniciar una transacción para asegurar la atomicidad de las operaciones
-    $conn->begin_transaction();
+    $conn->beginTransaction();
 
     try {
         // Insertar en la tabla tramites_documentos
         $query = "INSERT INTO tramites_documentos (documento_id, usuario_id, fecha_tramite, observacion) 
-                  VALUES (?, ?, ?, ?)";
+                  VALUES (:documento_id, :usuario_id, :fecha_tramite, :observacion)";
         $stmt = $conn->prepare($query);
 
-        if ($stmt === false) {
-            throw new Exception('Error en la preparación de la consulta: ' . $conn->error);
-        }
-
-        $stmt->bind_param("iiss", $documento_id, $usuario_id, $fecha_tramite, $observacion);
-
-        if (!$stmt->execute()) {
-            throw new Exception('Error en la ejecución de la consulta: ' . $stmt->error);
+        if (!$stmt->execute([
+            ':documento_id' => $documento_id,
+            ':usuario_id' => $usuario_id,
+            ':fecha_tramite' => $fecha_tramite,
+            ':observacion' => $observacion
+        ])) {
+            throw new Exception('Error en la ejecución de la consulta: ' . implode(' ', $stmt->errorInfo()));
         }
 
         // Actualizar la tabla documentos
-        $updateQuery = "UPDATE documentos SET estado = false WHERE id = ?";
+        $updateQuery = "UPDATE documentos SET estado = false WHERE id = :documento_id";
         $updateStmt = $conn->prepare($updateQuery);
 
-        if ($updateStmt === false) {
-            throw new Exception('Error en la preparación de la consulta de actualización: ' . $conn->error);
-        }
-
-        $updateStmt->bind_param("i", $documento_id);
-
-        if (!$updateStmt->execute()) {
-            throw new Exception('Error en la ejecución de la consulta de actualización: ' . $updateStmt->error);
+        if (!$updateStmt->execute([':documento_id' => $documento_id])) {
+            throw new Exception('Error en la ejecución de la consulta de actualización: ' . implode(' ', $updateStmt->errorInfo()));
         }
 
         // Confirmar la transacción
         $conn->commit();
         echo json_encode(['success' => true]);
 
-        // Cerrar las declaraciones preparadas
-        $stmt->close();
-        $updateStmt->close();
     } catch (Exception $e) {
         // Revertir la transacción en caso de error
-        $conn->rollback();
+        $conn->rollBack();
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
     }
 } else {
@@ -77,5 +67,5 @@ if (!empty($documento_id) && !empty($usuario_id) && !empty($observacion)) {
 }
 
 // Cerrar la conexión a la base de datos
-$conn->close();
+$conn = null;
 ?>

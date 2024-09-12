@@ -6,20 +6,19 @@ header('Content-Type: application/json');
 $method = $_SERVER['REQUEST_METHOD'];
 $input = json_decode(file_get_contents('php://input'), true);
 
-
 switch ($method) {
     case 'GET':
         // Obtener todos los roles
-        $result = $conn->query("SELECT * FROM roles");
-        $roles = [];
-        while ($row = $result->fetch_assoc()) {
-            $roles[] = $row;
+        try {
+            $stmt = $conn->query("SELECT * FROM roles");
+            $roles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            echo json_encode($roles);
+        } catch (PDOException $e) {
+            echo json_encode(['error' => $e->getMessage()]);
         }
-        echo json_encode($roles);
         break;
-    
 }
 
 // Cerrar la conexión
-$conn->close();
+$conn = null;
 ?>

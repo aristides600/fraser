@@ -1,29 +1,40 @@
 <?php
-require_once 'db.php';
+require_once 'db.php'; // Incluye tu archivo de conexión PDO
 header('Content-Type: application/json');
 
+// Obtener el parámetro patente
 $patente = $_GET['patente'];
 
-$sql = "SELECT v.id, v.patente, c.nombre AS color, m.nombre AS marca, mo.nombre AS modelo, v.anio 
-        FROM vehiculos v
-        JOIN marcas m ON v.marca_id = m.id
-        JOIN modelos mo ON v.modelo_id = mo.id
-        JOIN colores c ON v.color_id = c.id
-
-        WHERE v.patente LIKE ?";
-$stmt = $conn->prepare($sql);
-$patente = "%$patente%";
-$stmt->bind_param("s", $patente);
-$stmt->execute();
-$result = $stmt->get_result();
-
-$vehiculos = [];
-
-while ($row = $result->fetch_assoc()) {
-  $vehiculos[] = $row;
+try {
+    // Preparar la consulta SQL
+    $sql = "SELECT v.id, v.patente, c.nombre AS color, m.nombre AS marca, mo.nombre AS modelo, v.anio 
+            FROM vehiculos v
+            JOIN marcas m ON v.marca_id = m.id
+            JOIN modelos mo ON v.modelo_id = mo.id
+            JOIN colores c ON v.color_id = c.id
+            WHERE v.patente LIKE :patente";
+    
+    // Preparar la declaración
+    $stmt = $conn->prepare($sql);
+    
+    // Bind del parámetro
+    $patente = "%$patente%";
+    $stmt->bindParam(':patente', $patente, PDO::PARAM_STR);
+    
+    // Ejecutar la consulta
+    $stmt->execute();
+    
+    // Obtener los resultados
+    $vehiculos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Devolver los resultados como JSON
+    echo json_encode($vehiculos);
+    
+} catch (PDOException $e) {
+    // Manejo de errores
+    echo json_encode(['success' => false, 'message' => 'Error en la consulta: ' . $e->getMessage()]);
 }
 
-echo json_encode($vehiculos);
-
-$stmt->close();
-$conn->close();
+// Cerrar la conexión a la base de datos
+$conn = null;
+?>

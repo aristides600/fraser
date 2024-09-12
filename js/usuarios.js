@@ -11,83 +11,85 @@ const app = Vue.createApp({
                 usuario: '',
                 clave: '',
                 rol_id: '',
-                // estado: 1
+                estado: 1
             },
-            modalTitle: '',
-            modalAction: ''
+            mostrarForm: false
         };
     },
-    created() {
-        this.fetchUsuarios();
-        this.fetchRoles();
+    mounted() {
+        this.obtenerUsuarios();
+        this.obtenerRoles();  // Asegúrate de llamar a este método
     },
     methods: {
-        async fetchUsuarios() {
-            try {
-                const response = await axios.get('api/usuarios.php');
-                this.usuarios = response.data;
-            } catch (error) {
-                console.error(error);
-            }
+        obtenerUsuarios() {
+            axios.get('api/usuarios.php')
+                .then(response => {
+                    this.usuarios = response.data;
+                })
+                .catch(error => {
+                    console.error("Error al obtener los usuarios:", error);
+                });
         },
-        async fetchRoles() {
-            try {
-                const response = await axios.get('api/roles.php');
-                this.roles = response.data;
-            } catch (error) {
-                console.error(error);
-            }
+        obtenerRoles() {  // Este método no debería estar anidado dentro de otro
+            axios.get('api/roles.php')
+                .then(response => {
+                    this.roles = response.data;
+                })
+                .catch(error => {
+                    console.error("Error al obtener los roles:", error);
+                });
         },
-        showModal(action, usuario = {}) {
-            this.modalAction = action === 'create' ? 'Crear Usuario' : 'Actualizar Usuario';
-            this.modalTitle = action === 'create' ? 'Agregar Usuario' : 'Editar Usuario';
-            if (action === 'edit') {
-                this.form = { ...usuario };
-            } else {
-                this.form = {
-                    id: null,
-                    dni: '',
-                    apellido: '',
-                    nombre: '',
-                    usuario: '',
-                    clave: '',
-                    rol_id: '',
-                    // estado: 1
-                };
-            }
-            new bootstrap.Modal(document.getElementById('userModal')).show();
+        guardarUsuario() {
+            let endpoint = this.form.id ? `api/usuarios.php?id=${this.form.id}` : 'api/usuarios.php';
+            let method = this.form.id ? 'put' : 'post';
+        
+            // Asegurarnos de que enviamos los datos como JSON
+            axios({
+                method: method,
+                url: endpoint,
+                data: this.form,
+                headers: { 'Content-Type': 'application/json' } // Indicamos que es JSON
+            })
+            .then(() => {
+                this.obtenerUsuarios(); // Refrescar la lista de usuarios
+                this.mostrarForm = false; // Ocultar el formulario
+                Swal.fire('Éxito', 'Usuario guardado con éxito', 'success'); // Mostrar éxito
+            })
+            .catch(error => {
+                console.error("Error al guardar el usuario:", error.response.data || error); // Mostrar error
+                Swal.fire('Error', 'No se pudo guardar el usuario', 'error'); // Alerta de error
+            });
         },
-        async submitForm() {
-            try {
-                if (this.form.id) {
-                    // Actualizar
-                    await axios.post('api/usuarios.php', { update: true, ...this.form });
-                } else {
-                    // Crear
-                    await axios.post('api/usuarios.php', { create: true, ...this.form });
-                }
-                this.fetchUsuarios();
-                const modal = bootstrap.Modal.getInstance(document.getElementById('userModal'));
-                modal.hide();
-            } catch (error) {
-                console.error(error);
-            }
+        
+        editarUsuario(usuario) {
+            this.form = { ...usuario };
+            this.form.rol_id = usuario.rol_id;
+            this.mostrarForm = true;
         },
-        async deleteUsuario(id) {
-            if (confirm('¿Estás seguro de eliminar este usuario?')) {
-                try {
-                    await axios.post('api/usuarios.php', { delete: true, id });
-                    this.fetchUsuarios();
-                } catch (error) {
-                    console.error(error);
-                }
-            }
+        eliminarUsuario(id) {
+            axios.delete(`api/usuarios.php?id=${id}`)
+                .then(() => {
+                    this.obtenerUsuarios();
+                    Swal.fire('Éxito', 'Usuario eliminado con éxito', 'success');
+                })
+                .catch(error => {
+                    console.error("Error al eliminar el usuario:", error);
+                    Swal.fire('Error', 'No se pudo eliminar el usuario', 'error');
+                });
         },
-        getRolName(rol_id) {
-            const rol = this.roles.find(r => r.id === rol_id);
-            return rol ? rol.nombre : 'Desconocido';
+        mostrarFormulario() {
+            this.form = {
+                id: null,
+                dni: '',
+                apellido: '',
+                nombre: '',
+                usuario: '',
+                clave: '',
+                rol_id: '',
+                estado: 1
+            };
+            this.mostrarForm = true;
         }
-
     }
 });
 
