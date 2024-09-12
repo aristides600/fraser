@@ -1,21 +1,4 @@
 <?php
-// $servername = "localhost";
-// $username = "root";
-// $password = "";
-// $database = "fraser";
-
-// try {
-//     // Crear conexión PDO
-//     $conn = new PDO("mysql:host=$servername;dbname=$database", $username, $password);
-//     // Configurar el modo de error de PDO a excepciones
-//     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-//     // Eliminar echo para producción
-//     // echo "Conexión exitosa con la base de datos.";
-// } catch (PDOException $e) {
-//     // Manejo de errores
-//     die("Error de conexión: " . $e->getMessage());
-// }
-
 $servername = "localhost";  // o 127.0.0.1 si localhost da problemas
 $username = "root";         // usuario por defecto en XAMPP
 $password = "";             // contraseña vacía por defecto en XAMPP
