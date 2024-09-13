@@ -135,6 +135,8 @@
     <script src="./cdn/sweetalert2@10.js"></script>
     <script src="./cdn/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./js/chequeo_permiso.js"></script>
+
     <script src="./js/vehiculos.js"></script>
     <?php include 'footer.php'; ?>
 

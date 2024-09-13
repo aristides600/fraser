@@ -10,6 +10,8 @@ createApp({
     },
     mounted() {
         this.getMarcas();
+        chequeo_permiso('vehiculos');
+
     },
     methods: {
         getMarcas() {

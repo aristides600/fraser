@@ -104,6 +104,8 @@
   <script src="./cdn/vue.global.js"></script>
   <script src="./cdn/axios.min.js"></script>
   <script src="./cdn/sweetalert2@10.js"></script>
+  <script src="./js/chequeo_permiso.js"></script>
+
   <script src="./js/nuevo_documento.js"></script>
   <?php include 'footer.php'; ?>
 </body>

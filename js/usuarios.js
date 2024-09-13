@@ -19,6 +19,7 @@ const app = Vue.createApp({
     mounted() {
         this.obtenerUsuarios();
         this.obtenerRoles();  // Asegúrate de llamar a este método
+        chequeo_permiso('usuarios');
     },
     methods: {
         obtenerUsuarios() {
@@ -39,28 +40,34 @@ const app = Vue.createApp({
                     console.error("Error al obtener los roles:", error);
                 });
         },
+      
         guardarUsuario() {
             let endpoint = this.form.id ? `api/usuarios.php?id=${this.form.id}` : 'api/usuarios.php';
             let method = this.form.id ? 'put' : 'post';
-        
-            // Asegurarnos de que enviamos los datos como JSON
+
             axios({
                 method: method,
                 url: endpoint,
                 data: this.form,
-                headers: { 'Content-Type': 'application/json' } // Indicamos que es JSON
+                headers: { 'Content-Type': 'application/json' }
             })
-            .then(() => {
-                this.obtenerUsuarios(); // Refrescar la lista de usuarios
-                this.mostrarForm = false; // Ocultar el formulario
-                Swal.fire('Éxito', 'Usuario guardado con éxito', 'success'); // Mostrar éxito
-            })
-            .catch(error => {
-                console.error("Error al guardar el usuario:", error.response.data || error); // Mostrar error
-                Swal.fire('Error', 'No se pudo guardar el usuario', 'error'); // Alerta de error
-            });
+                .then(() => {
+                    this.obtenerUsuarios(); // Refrescar la lista de usuarios
+                    this.mostrarForm = false; // Ocultar el formulario
+                    Swal.fire('Éxito', 'Usuario guardado con éxito', 'success'); // Mostrar éxito
+                })
+                .catch(error => {
+                    if (error.response && error.response.status === 409) {
+                        // Si el servidor devuelve un conflicto (DNI o usuario duplicado)
+                        Swal.fire('Error', error.response.data.error, 'error'); // Mostrar el mensaje de error
+                    } else {
+                        console.error("Error al guardar el usuario:", error.response.data || error); // Mostrar error
+                        Swal.fire('Error', 'No se pudo guardar el usuario', 'error'); // Alerta de error genérica
+                    }
+                });
         },
-        
+
+
         editarUsuario(usuario) {
             this.form = { ...usuario };
             this.form.rol_id = usuario.rol_id;

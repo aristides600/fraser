@@ -10,6 +10,8 @@ createApp({
     },
     mounted() {
         this.cargarDatos(); // Cargar todos los datos al iniciar
+        chequeo_permiso('documentos');
+
     },
     methods: {
         cargarDatos() {

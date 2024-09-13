@@ -21,22 +21,24 @@ try {
         case 'POST':
             // Crear usuario
             $dni = $input['dni'];
-            $apellido = $input['apellido'];
-            $nombre = $input['nombre'];
+            $apellido = strtoupper($input['apellido']);
+            $nombre = strtoupper($input['nombre']);
+
             $usuario = $input['usuario'];
             $clave = password_hash($input['clave'], PASSWORD_BCRYPT);
             $rol_id = $input['rol_id'];
-            $estado = $input['estado'];
+            $estado = 1;
 
             // Verificar si el usuario o DNI ya existe
             $stmt = $conn->prepare("SELECT COUNT(*) FROM usuarios WHERE dni = ? OR usuario = ?");
             $stmt->execute([$dni, $usuario]);
             if ($stmt->fetchColumn() > 0) {
                 http_response_code(409); // Conflict
-                echo json_encode(['error' => 'Usuario o DNI ya existe']);
+                echo json_encode(['error' => 'El DNI o el nombre de usuario ya existe']);
                 exit;
             }
 
+            // Insertar el nuevo usuario
             $stmt = $conn->prepare("INSERT INTO usuarios (dni, apellido, nombre, usuario, clave, rol_id, estado) VALUES (?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([$dni, $apellido, $nombre, $usuario, $clave, $rol_id, $estado]);
 
@@ -47,17 +49,28 @@ try {
             // Editar usuario
             $id = $_GET['id'];
             $dni = $input['dni'];
-            $apellido = $input['apellido'];
-            $nombre = $input['nombre'];
+            $apellido = strtoupper($input['apellido']);
+            $nombre = strtoupper($input['nombre']);
             $usuario = $input['usuario'];
             $rol_id = $input['rol_id'];
-            $estado = $input['estado'];
+            // $estado = $input['estado'];
 
-            $stmt = $conn->prepare("UPDATE usuarios SET dni = ?, apellido = ?, nombre = ?, usuario = ?, rol_id = ?, estado = ? WHERE id = ?");
-            $stmt->execute([$dni, $apellido, $nombre, $usuario, $rol_id, $estado, $id]);
+            // Verificar si el nuevo DNI o usuario ya existen en otro registro
+            $stmt = $conn->prepare("SELECT COUNT(*) FROM usuarios WHERE (dni = ? OR usuario = ?) AND id != ?");
+            $stmt->execute([$dni, $usuario, $id]);
+            if ($stmt->fetchColumn() > 0) {
+                http_response_code(409); // Conflict
+                echo json_encode(['error' => 'El DNI o el nombre de usuario ya existe en otro registro']);
+                exit;
+            }
+
+            // Actualizar usuario
+            $stmt = $conn->prepare("UPDATE usuarios SET dni = ?, apellido = ?, nombre = ?, usuario = ?, rol_id = ? WHERE id = ?");
+            $stmt->execute([$dni, $apellido, $nombre, $usuario, $rol_id, $id]);
 
             echo json_encode(['message' => 'Usuario actualizado con éxito']);
             break;
+
 
         case 'DELETE':
             // Eliminar usuario

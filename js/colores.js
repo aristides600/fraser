@@ -10,6 +10,8 @@ createApp({
     },
     mounted() {
         this.getColores();
+        chequeo_permiso('vehiculos');
+
     },
     methods: {
         getColores() {

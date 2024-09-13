@@ -15,6 +15,8 @@ createApp({
     mounted() {
         this.obtenerModelos();
         this.obtenerMarcas();
+        chequeo_permiso('vehiculos');
+
     },
     methods: {
         async obtenerModelos() {

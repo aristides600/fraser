@@ -108,5 +108,7 @@ createApp({
   },
   mounted() {
     this.cargarTipos();
+    chequeo_permiso('documentos');
+
   }
 }).mount('#app');

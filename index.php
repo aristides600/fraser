@@ -1,3 +1,22 @@
+<?php
+require_once 'api/autenticacion.php';
+require_once 'api/permisos.php';
+
+// Verificar si la sesión ya está activa
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
+// Verificar si el usuario está autenticado
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit;
+}
+
+$user_id = $_SESSION['user_id'];
+$nombre = isset($_SESSION['nombre']) ? $_SESSION['nombre'] : 'Usuario';
+$apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -88,6 +107,13 @@
         .nav-link:hover {
             color: #007bff;
         }
+
+        .user-info {
+            margin-right: 10px;
+            /* Ajustar este valor según sea necesario */
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 
@@ -107,37 +133,67 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
                     <ul class="navbar-nav">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="documentosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Documentos
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="documentosDropdown" data-bs-auto-close="outside">
-                                <li><a class="dropdown-item" href="documentos.php">Documentos</a></li>
-                                <li><a class="dropdown-item" href="tramitados.php">Tramitados</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="vehiculosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Vehículos
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="vehiculosDropdown" data-bs-auto-close="outside">
-                                <li><a class="dropdown-item" href="vehiculos.php">Vehículos</a></li>
-                                <li><a class="dropdown-item" href="marcas.php">Marcas</a></li>
-                                <li><a class="dropdown-item" href="modelos.php">Modelos</a></li>
-                                <li><a class="dropdown-item" href="colores.php">Colores</a></li>
-                            </ul>
-                        </li>
-                        
-                    </ul>
+                        <?php if (tienePermiso($user_id, 'documentos')) : ?>
 
-                    <!-- Botón de cerrar sesión -->
-                    <a href="logout.php" class="logout-button ms-auto">
-                        <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
-                    </a>
-                    <!-- Botón de cambiar contraseña -->
-                    <button class="change-password-button ms-3" type="button" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
-                        <i class="bi bi-key-fill"></i>
-                    </button>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="documentosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Documentos
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="documentosDropdown" data-bs-auto-close="outside">
+                                    <li><a class="dropdown-item" href="documentos.php">Documentos</a></li>
+                                    <li><a class="dropdown-item" href="tramitados.php">Tramitados</a></li>
+                                </ul>
+                            </li>
+                        <?php endif; ?>
+                        <?php if (tienePermiso($user_id, 'vehiculos')) : ?>
+
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="vehiculosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Vehículos
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="vehiculosDropdown" data-bs-auto-close="outside">
+                                    <li><a class="dropdown-item" href="vehiculos.php">Vehículos</a></li>
+                                    <li><a class="dropdown-item" href="marcas.php">Marcas</a></li>
+                                    <li><a class="dropdown-item" href="modelos.php">Modelos</a></li>
+                                    <li><a class="dropdown-item" href="colores.php">Colores</a></li>
+                                </ul>
+                            </li>
+                        <?php endif; ?>
+                        <?php if (tienePermiso($user_id, 'usuarios')) : ?>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="usuariosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Usuarios
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="usuariosDropdown" data-bs-auto-close="outside">
+                                    <li><a class="dropdown-item" href="usuarios.php">Usuarios</a></li>
+
+                                </ul>
+                            </li>
+                        <?php endif; ?>
+
+                    </ul>
+                    <!-- Menú de navegación -->
+                    <!-- Información del usuario y botones a la derecha -->
+                    <div class="d-flex ms-auto align-items-center">
+                        <div class="user-info">
+                            <?php
+                            echo htmlspecialchars($nombre . ' ' . htmlspecialchars($apellido));
+                            ?>
+                        </div>
+
+                        <!-- Botón de cerrar sesión -->
+                        <a href="logout.php" class="logout-button ms-3">
+                            <i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión
+                        </a>
+
+                        <!-- Botón de cambiar contraseña -->
+                        <button class="change-password-button ms-3" type="button" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                            <i class="bi bi-key-fill"></i>
+                        </button>
+                    </div>
+
+
                 </div>
             </div>
         </nav>
@@ -167,10 +223,14 @@
 
         <!-- Modal para cambiar contraseña -->
         <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="changePasswordModalLabel">Cambiar Contraseña</h5>
+                   
+                        <h5 class="modal-title" id="changePasswordModalLabel">Cambiar Contraseña de: <?php
+                            echo htmlspecialchars($nombre . ' ' . htmlspecialchars($apellido));
+                            ?></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">

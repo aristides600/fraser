@@ -27,6 +27,8 @@ const app = Vue.createApp({
 
         // Initialize the modal instance after the DOM is fully loaded
         this.vehiculoModal = new bootstrap.Modal(document.getElementById('vehiculoModal'));
+        chequeo_permiso('vehiculos');
+
     },
     computed: {
         modelosFiltrados() {

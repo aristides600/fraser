@@ -82,6 +82,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/vue@3.2.33/dist/vue.global.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./js/chequeo_permiso.js"></script>
+
     <script src="./js/tramitados.js"></script>
 </body>
 
