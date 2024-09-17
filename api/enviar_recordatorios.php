@@ -48,17 +48,26 @@ if (count($documentos) > 0) {
 
         // Configuración del remitente
         $mail->setFrom('aristides600@gmail.com', 'Transporte Fraser');
+        $mail->addAddress('aristides600@hotmail.com'); // Cambia aquí tu correo destinatario
 
-        // Enviar el correo siempre a esta dirección
-        $mail->addAddress('transporterg@fraser.com.ar'); // Cambia aquí tu correo destinatario
+        // Configurar la zona horaria a Buenos Aires
+        $argentinaTimezone = new DateTimeZone('America/Argentina/Buenos_Aires');
 
         // Recorrer documentos y enviar correos
         foreach ($documentos as $documento) {
+            // Convertir la fecha de vencimiento al formato correcto
+            $fechaVencimiento = new DateTime($documento['fecha_vencimiento']);
+            $fechaVencimiento->setTimezone($argentinaTimezone);
+            $fechaFormateada = $fechaVencimiento->format('d/m/Y H:i:s'); // Puedes ajustar el formato de fecha como prefieras
+
+            // Configurar UTF-8 para caracteres especiales
+            $mail->CharSet = 'UTF-8';
+
             // Contenido del correo
             $mail->isHTML(true); // Establecer que el correo sea en formato HTML
-            $mail->Subject = 'Recordatorio: Documento Próximo a Vencer';
-            $mail->Body = 'Hola, el documento del vehículo con patente <strong>' . $documento['patente'] . '</strong> vencerá el <strong>' . $documento['fecha_vencimiento'] . '</strong>. Por favor, asegúrate de renovarlo a tiempo.';
-            $mail->AltBody = 'Hola, el documento del vehículo con patente ' . $documento['patente'] . ' vencerá el ' . $documento['fecha_vencimiento'] . '.';
+            $mail->Subject = 'Documento por Vencer';
+            $mail->Body = 'Patente <strong>' . htmlentities($documento['patente'], ENT_QUOTES, 'UTF-8') . '</strong> vencerá el <strong>' . htmlentities($fechaFormateada, ENT_QUOTES, 'UTF-8') . '</strong>.';
+            $mail->AltBody = 'Hola, el documento del vehículo con patente ' . htmlentities($documento['patente'], ENT_QUOTES, 'UTF-8') . ' vencerá el ' . htmlentities($fechaFormateada, ENT_QUOTES, 'UTF-8') . '.';
 
             // Intentar enviar el correo
             if ($mail->send()) {
