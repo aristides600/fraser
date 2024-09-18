@@ -114,6 +114,34 @@ $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
             display: flex;
             align-items: center;
         }
+
+        /* /// */
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+        }
+
+        #app {
+            min-height: 100vh;
+            /* Hace que el contenedor ocupe toda la ventana */
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex-grow: 1;
+            /* Hace que el contenido crezca y empuje el footer hacia abajo */
+        }
+
+        footer {
+            background-color: #dc3545;
+            border-top: 1px solid #dee2e6;
+            padding: 10px 0;
+            position: relative;
+            width: 100%;
+            color: white; /* Cambia el color del texto a blanco */
+        }
     </style>
 </head>
 
@@ -198,65 +226,79 @@ $apellido = isset($_SESSION['apellido']) ? $_SESSION['apellido'] : '';
             </div>
         </nav>
 
-        <!-- Contenido principal -->
-        <div class="card-container">
-            <div class="card">
-                <div class="card-header">
-                    <i class="bi bi-car-front"></i> Vehículos
-                </div>
-                <div class="card-body">
-                    <p>Gestión de Vehículos.</p>
-                    <a href="vehiculos.php" class="btn btn-primary">Ir a Vehículos</a>
-                </div>
-            </div>
 
-            <div class="card">
-                <div class="card-header">
-                    <i class="bi bi-file-earmark-text"></i> Documentos
-                </div>
-                <div class="card-body">
-                    <p>Gestión de Documentos.</p>
-                    <a href="documentos.php" class="btn btn-primary">Ir a Documentos</a>
-                </div>
-            </div>
-        </div>
+        <main class="container">
 
-        <!-- Modal para cambiar contraseña -->
-        <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                   
-                        <h5 class="modal-title" id="changePasswordModalLabel">Cambiar Contraseña de: <?php
-                            echo htmlspecialchars($nombre . ' ' . htmlspecialchars($apellido));
-                            ?></h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <!-- Contenido principal -->
+            <div class="card-container">
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-car-front"></i> Vehículos
                     </div>
-                    <div class="modal-body">
-                        <form id="changePasswordForm">
-                            <div class="mb-3">
-                                <label for="currentPassword" class="form-label">Contraseña Actual</label>
-                                <input type="password" class="form-control" id="currentPassword" v-model="currentPassword" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="newPassword" class="form-label">Nueva Contraseña</label>
-                                <input type="password" class="form-control" id="newPassword" v-model="newPassword" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="confirmPassword" class="form-label">Confirmar Nueva Contraseña</label>
-                                <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" required>
-                            </div>
-                        </form>
+                    <div class="card-body">
+                        <p>Gestión de Vehículos.</p>
+                        <a href="vehiculos.php" class="btn btn-primary">Ir a Vehículos</a>
                     </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" @click="changePassword">Guardar Cambios</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <i class="bi bi-file-earmark-text"></i> Documentos
+                    </div>
+                    <div class="card-body">
+                        <p>Gestión de Documentos.</p>
+                        <a href="documentos.php" class="btn btn-primary">Ir a Documentos</a>
                     </div>
                 </div>
             </div>
-        </div>
+
+            <!-- Modal para cambiar contraseña -->
+            <div class="modal fade" id="changePasswordModal" tabindex="-1" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
+
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+
+                            <h5 class="modal-title" id="changePasswordModalLabel">Cambiar Contraseña de: <?php
+                                                                                                            echo htmlspecialchars($nombre . ' ' . htmlspecialchars($apellido));
+                                                                                                            ?></h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="changePasswordForm">
+                                <div class="mb-3">
+                                    <label for="currentPassword" class="form-label">Contraseña Actual</label>
+                                    <input type="password" class="form-control" id="currentPassword" v-model="currentPassword" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="newPassword" class="form-label">Nueva Contraseña</label>
+                                    <input type="password" class="form-control" id="newPassword" v-model="newPassword" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="confirmPassword" class="form-label">Confirmar Nueva Contraseña</label>
+                                    <input type="password" class="form-control" id="confirmPassword" v-model="confirmPassword" required>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-primary" @click="changePassword">Guardar Cambios</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
     </div>
+    <footer>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p>&copy; Copyright 2024 | Transporte Fraser | Desarrollado por InfoSys</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@3.2.31/dist/vue.global.prod.js"></script>
