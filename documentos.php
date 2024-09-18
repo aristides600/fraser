@@ -66,8 +66,11 @@
                         <span v-else-if="doc.diasPorVencer < 0">
                             <i class="bi bi-exclamation-triangle text-danger"></i> Vencido hace {{ Math.abs(doc.diasPorVencer) }} días
                         </span>
-                        <span v-else>No</span>
+                        <span v-else-if="doc.diasPorVencer === 0">
+                            <i class="bi bi-exclamation-triangle text-warning"></i> Vence hoy
+                        </span>
                     </td>
+
                     <td>{{ `${doc.usuario_nombre} ${doc.usuario_apellido}` }}</td>
 
                     <td>

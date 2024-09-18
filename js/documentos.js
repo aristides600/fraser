@@ -9,6 +9,54 @@ createApp({
         };
     },
     methods: {
+        // obtenerDocumentos() {
+        //     axios.get('api/documentos.php')
+        //         .then(response => {
+        //             console.log(response.data); // Verifica los datos recibidos
+
+        //             // Agrupamos los documentos por id
+        //             const documentosAgrupados = response.data.reduce((acc, doc) => {
+        //                 // Si el id ya está en el acumulador, agregamos el color
+        //                 if (!acc[doc.id]) {
+        //                     acc[doc.id] = { ...doc, colores: [doc.color_nombre] };
+        //                 } else {
+        //                     acc[doc.id].colores.push(doc.color_nombre);
+        //                 }
+        //                 return acc;
+        //             }, {});
+
+        //             // Convertimos el objeto agrupado en un array
+        //             let documentos = Object.values(documentosAgrupados);
+
+        //             // Filtramos los documentos por patente si se ha ingresado alguna patente
+        //             if (this.patente.trim() !== '') {
+        //                 documentos = documentos.filter(doc => doc.patente.toLowerCase().includes(this.patente.toLowerCase()));
+        //             }
+
+        //             // Si no se encuentran coincidencias, mostrar un mensaje
+        //             this.sinCoincidencias = documentos.length === 0;
+
+        //             // Ordenamos los documentos por fecha de vencimiento
+        //             documentos.sort((a, b) => new Date(a.fecha_vencimiento) - new Date(b.fecha_vencimiento));
+
+        //             // Procesamos los datos para incluir el estado y la clase CSS
+        //             this.documentos = documentos.map(doc => {
+        //                 const hoy = new Date();
+        //                 const fechaVencimiento = new Date(doc.fecha_vencimiento);
+        //                 const diferenciaDias = (fechaVencimiento - hoy) / (1000 * 60 * 60 * 24);
+
+        //                 return {
+        //                     ...doc,
+        //                     diasPorVencer: Math.ceil(diferenciaDias),
+        //                     estado: diferenciaDias > 0 ? (diferenciaDias <= 10 ? `Vence en ${Math.ceil(diferenciaDias)} días` : 'No') : `Vencido hace ${Math.abs(Math.floor(diferenciaDias))} días`,
+        //                     class: diferenciaDias > 0 ? (diferenciaDias <= 10 ? 'resaltar' : '') : 'vencido'
+        //                 };
+        //             });
+        //         })
+        //         .catch(error => {
+        //             console.error(error);
+        //         });
+        // },
         obtenerDocumentos() {
             axios.get('api/documentos.php')
                 .then(response => {
@@ -45,11 +93,25 @@ createApp({
                         const fechaVencimiento = new Date(doc.fecha_vencimiento);
                         const diferenciaDias = (fechaVencimiento - hoy) / (1000 * 60 * 60 * 24);
 
+                        let estado;
+                        let clase;
+
+                        if (Math.floor(diferenciaDias) === 0) {
+                            estado = 'Vence hoy';
+                            clase = 'vence-hoy';  // Puedes definir una clase CSS para este caso
+                        } else if (diferenciaDias > 0) {
+                            estado = diferenciaDias <= 10 ? `Vence en ${Math.ceil(diferenciaDias)} días` : 'No';
+                            clase = diferenciaDias <= 10 ? 'resaltar' : '';
+                        } else {
+                            estado = `Vencido hace ${Math.abs(Math.floor(diferenciaDias))} días`;
+                            clase = 'vencido';
+                        }
+
                         return {
                             ...doc,
                             diasPorVencer: Math.ceil(diferenciaDias),
-                            estado: diferenciaDias > 0 ? (diferenciaDias <= 10 ? `Vence en ${Math.ceil(diferenciaDias)} días` : 'No') : `Vencido hace ${Math.abs(Math.floor(diferenciaDias))} días`,
-                            class: diferenciaDias > 0 ? (diferenciaDias <= 10 ? 'resaltar' : '') : 'vencido'
+                            estado,
+                            class: clase
                         };
                     });
                 })
@@ -57,6 +119,7 @@ createApp({
                     console.error(error);
                 });
         },
+
 
         getRowClass(doc) {
             return doc.class || '';

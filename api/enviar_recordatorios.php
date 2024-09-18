@@ -13,11 +13,16 @@ require 'C:/xampp/htdocs/documentacion/PHPMailer-master/src/PHPMailer.php';
 require 'C:/xampp/htdocs/documentacion/PHPMailer-master/src/SMTP.php';
 
 // Consulta para obtener los documentos por vencer
+// $sql = "SELECT d.id, d.fecha_vencimiento, v.patente 
+//         FROM documentos d 
+//         JOIN vehiculos v ON d.vehiculo_id = v.id 
+//         WHERE d.fecha_vencimiento BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 10 DAY) 
+//         AND d.estado = 1";
 $sql = "SELECT d.id, d.fecha_vencimiento, v.patente 
         FROM documentos d 
         JOIN vehiculos v ON d.vehiculo_id = v.id 
-        WHERE d.fecha_vencimiento BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 7 DAY) 
-        AND d.recordatorio_enviado = 0";
+        WHERE d.fecha_vencimiento BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 10 DAY) 
+        AND d.estado = 1";
 
 $stmt = $conn->prepare($sql);
 $stmt->execute();
@@ -86,5 +91,5 @@ if (count($documentos) > 0) {
         echo "Error al enviar correos: {$mail->ErrorInfo}";
     }
 } else {
-    echo "No hay documentos por vencer en los próximos 7 días.";
+    echo "No hay documentos por vencer en los próximos 10 días.";
 }
