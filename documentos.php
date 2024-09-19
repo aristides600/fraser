@@ -83,10 +83,9 @@
         <div class="d-flex justify-content-end mt-4">
             <a href="index.php" class="btn btn-danger">Salir</a>
         </div>
-        <div>
-            <!-- Botón para enviar recordatorios -->
+        <!-- <div>
             <button @click="sendReminderEmails" class="btn btn-primary">Enviar Recordatorios</button>
-        </div>
+        </div> -->
     </div>
     <?php include 'footer.php'; ?>
 

@@ -2,7 +2,9 @@ const app = Vue.createApp({
     data() {
         return {
             usuario: '',
-            clave: ''
+            clave: '',
+            timeoutID: null,
+            tiempoInactividad: 20 * 60 * 1000 // 20 minutos en milisegundos
         };
     },
     methods: {
@@ -11,68 +13,52 @@ const app = Vue.createApp({
                 usuario: this.usuario,
                 clave: this.clave
             })
-                .then(response => {
-                    if (response.data.success) {
-                        // mostrarMensajeExito("Logeado exitosamente");
-                        // Login exitoso, redireccionar a otra página
-
-                        window.location.href = 'index.php';
-
-                    } else {
-                        mostrarMensajeError(response.data.message || "Datos incorrectos");
-                    }
-                })
-                .catch(error => {
-                    console.error('Error al iniciar sesión: ' + error);
-                    mostrarMensajeError("Error al iniciar sesión");
+            .then(response => {
+                if (response.data.success) {
+                    this.iniciarTemporizadorInactividad(); // Iniciar temporizador
+                    window.location.href = 'index.php'; // Redireccionar al dashboard
+                } else {
+                    Swal.fire({
+                        text: response.data.message || "Datos incorrectos",
+                        icon: 'error',
+                        timer: 3000,
+                        showConfirmButton: false
+                    });
+                }
+            })
+            .catch(error => {
+                Swal.fire({
+                    text: "Error al iniciar sesión",
+                    icon: 'error',
+                    timer: 3000,
+                    showConfirmButton: false
                 });
+            });
+        },
+        iniciarTemporizadorInactividad() {
+            this.resetearTemporizador(); // Reseteamos cada vez que se llama esta función
+            window.addEventListener('mousemove', this.resetearTemporizador);
+            window.addEventListener('keydown', this.resetearTemporizador);
+        },
+        resetearTemporizador() {
+            clearTimeout(this.timeoutID);
+            this.timeoutID = setTimeout(this.cerrarSesionPorInactividad, this.tiempoInactividad);
+        },
+        cerrarSesionPorInactividad() {
+            Swal.fire({
+                text: "Sesión cerrada por inactividad",
+                icon: 'info',
+                timer: 3000,
+                showConfirmButton: false
+            });
+            window.location.href = 'logout.php'; // Redirigir a la página de logout
+        }
+    },
+    mounted() {
+        if (window.location.href.includes('index.php')) {
+            this.iniciarTemporizadorInactividad();
         }
     }
 });
 
 app.mount('#app');
-// const app = Vue.createApp({
-//     data() {
-//         return {
-//             usuario: '',
-//             clave: '',
-//             permisos: {}  // Almacenar permisos aquí
-//         };
-//     },
-//     methods: {
-//         login() {
-//             axios.post('api/login.php', {
-//                 usuario: this.usuario,
-//                 clave: this.clave
-//             })
-//             .then(response => {
-//                 if (response.data.success) {
-//                     this.permisos = response.data.permisos;
-//                     // Guardar permisos en localStorage
-//                     localStorage.setItem('permisos', JSON.stringify(this.permisos));
-//                     window.location.href = 'index.php';
-//                 } else {
-//                     mostrarMensajeError(response.data.message || "Datos incorrectos");
-//                 }
-//             })
-//             .catch(error => {
-//                 console.error('Error al iniciar sesión: ' + error);
-//                 mostrarMensajeError("Error al iniciar sesión");
-//             });
-//         },
-//         cerrarSesion() {
-//             // Limpiar permisos de localStorage
-//             localStorage.removeItem('permisos');
-//             window.location.href = 'login.php';
-//         }
-//     },
-//     mounted() {
-//         // Cargar permisos desde localStorage si existen
-//         const permisosGuardados = localStorage.getItem('permisos');
-//         if (permisosGuardados) {
-//             this.permisos = JSON.parse(permisosGuardados);
-//         }
-//     }
-// });
-
-// app.mount('#app');

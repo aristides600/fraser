@@ -1,7 +1,3 @@
-<?php
-require_once 'api/autenticacion_abierta.php';
-// require_once 'api/autenticacion.php';
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -27,16 +23,10 @@ require_once 'api/autenticacion_abierta.php';
             background-color: #fff;
         }
 
-        /* .form-label {
-            display: block;
-            text-align: left;
-        } */
-
         .form-label {
             display: block;
             text-align: left;
             padding-left: 2.5cm;
-            /* Agregar 2 cm de espacio a la izquierda */
         }
 
         .custom-size {
@@ -47,12 +37,10 @@ require_once 'api/autenticacion_abierta.php';
 
         .input-half {
             width: calc(50% - 5px);
-            /* 50% menos el margen para separar los elementos */
         }
 
         .center-input {
             margin: 0 auto;
-            /* Centrar horizontalmente */
         }
     </style>
 </head>
