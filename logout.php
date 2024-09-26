@@ -16,4 +16,16 @@ exit();
 
 
 
+// session_start();
+
+// // Destruir la sesión
+// session_unset();
+// session_destroy();
+
+// // Devolver una respuesta JSON si es necesario
+// echo json_encode([
+//     'success' => true,
+//     'message' => 'Sesión cerrada por inactividad'
+// ]);
+
 ?>

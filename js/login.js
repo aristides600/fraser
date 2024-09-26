@@ -4,7 +4,7 @@ const app = Vue.createApp({
             usuario: '',
             clave: '',
             timeoutID: null,
-            tiempoInactividad: 20 * 60 * 1000 // 20 minutos en milisegundos
+            tiempoInactividad: 30 * 60 * 1000 // 30 minutos en milisegundos
         };
     },
     methods: {
@@ -15,7 +15,7 @@ const app = Vue.createApp({
             })
             .then(response => {
                 if (response.data.success) {
-                    this.iniciarTemporizadorInactividad(); // Iniciar temporizador
+                    this.iniciarTemporizadorInactividad(); // Iniciar temporizador de inactividad
                     window.location.href = 'index.php'; // Redireccionar al dashboard
                 } else {
                     Swal.fire({
@@ -36,7 +36,7 @@ const app = Vue.createApp({
             });
         },
         iniciarTemporizadorInactividad() {
-            this.resetearTemporizador(); // Reseteamos cada vez que se llama esta función
+            this.resetearTemporizador(); // Resetea el temporizador cuando haya actividad
             window.addEventListener('mousemove', this.resetearTemporizador);
             window.addEventListener('keydown', this.resetearTemporizador);
         },
@@ -50,13 +50,17 @@ const app = Vue.createApp({
                 icon: 'info',
                 timer: 3000,
                 showConfirmButton: false
+            }).then(() => {
+                // Petición para cerrar sesión en el servidor
+                axios.post('logout.php').then(() => {
+                    window.location.href = 'login.php'; // Redirigir al login
+                });
             });
-            window.location.href = 'logout.php'; // Redirigir a la página de logout
         }
     },
     mounted() {
         if (window.location.href.includes('index.php')) {
-            this.iniciarTemporizadorInactividad();
+            this.iniciarTemporizadorInactividad(); // Iniciar temporizador en el dashboard
         }
     }
 });

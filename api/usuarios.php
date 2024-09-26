@@ -12,7 +12,7 @@ try {
     switch ($method) {
         case 'GET':
             // Listar usuarios
-            $stmt = $conn->prepare("SELECT u.id, u.dni, u.apellido, u.nombre, u.usuario, u.estado, u.rol_id, r.nombre as rol FROM usuarios u JOIN roles r ON u.rol_id = r.id");
+            $stmt = $conn->prepare("SELECT u.id, u.dni, u.apellido, u.nombre, u.usuario, u.estado, u.rol_id, r.nombre as rol FROM usuarios u JOIN roles r ON u.rol_id = r.id WHERE u.estado = true");
             $stmt->execute();
             $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
             echo json_encode($usuarios);
@@ -52,6 +52,8 @@ try {
             $apellido = strtoupper($input['apellido']);
             $nombre = strtoupper($input['nombre']);
             $usuario = $input['usuario'];
+            $clave = password_hash($input['clave'], PASSWORD_BCRYPT);
+
             $rol_id = $input['rol_id'];
             // $estado = $input['estado'];
 
@@ -65,20 +67,20 @@ try {
             }
 
             // Actualizar usuario
-            $stmt = $conn->prepare("UPDATE usuarios SET dni = ?, apellido = ?, nombre = ?, usuario = ?, rol_id = ? WHERE id = ?");
-            $stmt->execute([$dni, $apellido, $nombre, $usuario, $rol_id, $id]);
+            $stmt = $conn->prepare("UPDATE usuarios SET dni = ?, apellido = ?, nombre = ?, usuario = ?, clave = ?, rol_id = ? WHERE id = ?");
+            $stmt->execute([$dni, $apellido, $nombre, $usuario, $clave, $rol_id, $id]);
 
             echo json_encode(['message' => 'Usuario actualizado con éxito']);
             break;
 
-
         case 'DELETE':
-            // Eliminar usuario
+            // Borrado lógico del usuario
             $id = $_GET['id'];
-            $stmt = $conn->prepare("DELETE FROM usuarios WHERE id = ?");
+            $stmt = $conn->prepare("UPDATE usuarios SET estado = 0 WHERE id = ?");
             $stmt->execute([$id]);
-            echo json_encode(['message' => 'Usuario eliminado con éxito']);
+            echo json_encode(['message' => 'Usuario desactivado con éxito']);
             break;
+
 
         default:
             http_response_code(405); // Method Not Allowed

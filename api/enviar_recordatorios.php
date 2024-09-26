@@ -13,11 +13,6 @@ require 'C:/xampp/htdocs/documentacion/PHPMailer-master/src/PHPMailer.php';
 require 'C:/xampp/htdocs/documentacion/PHPMailer-master/src/SMTP.php';
 
 // Consulta para obtener los documentos por vencer
-// $sql = "SELECT d.id, d.fecha_vencimiento, v.patente 
-//         FROM documentos d 
-//         JOIN vehiculos v ON d.vehiculo_id = v.id 
-//         WHERE d.fecha_vencimiento BETWEEN NOW() AND DATE_ADD(NOW(), INTERVAL 10 DAY) 
-//         AND d.estado = 1";
 $sql = "SELECT d.id, d.fecha_vencimiento, v.patente 
         FROM documentos d 
         JOIN vehiculos v ON d.vehiculo_id = v.id 
@@ -52,14 +47,27 @@ if (count($documentos) > 0) {
         );
 
         // Configuración del remitente
-        $mail->setFrom('aristides600@gmail.com', 'Transporte Fraser');
-        $mail->addAddress('aristides600@hotmail.com'); // Cambia aquí tu correo destinatario
+        $mail->setFrom('aristides600@gmail.com', 'InfoSys');
 
-        // Configurar la zona horaria a Buenos Aires
-        $argentinaTimezone = new DateTimeZone('America/Argentina/Buenos_Aires');
+        // Lista de correos destinatarios
+        $correos = [
+            'aristides600@hotmail.com',
+            'aristides600@gmail.com'
+        ];
 
         // Recorrer documentos y enviar correos
         foreach ($documentos as $documento) {
+            // Limpiar destinatarios antes de agregar los nuevos
+            $mail->clearAddresses();
+
+            // Agregar múltiples destinatarios
+            foreach ($correos as $correo) {
+                $mail->addAddress($correo);
+            }
+
+            // Configurar la zona horaria a Buenos Aires
+            $argentinaTimezone = new DateTimeZone('America/Argentina/Buenos_Aires');
+
             // Convertir la fecha de vencimiento al formato correcto
             $fechaVencimiento = new DateTime($documento['fecha_vencimiento']);
             $fechaVencimiento->setTimezone($argentinaTimezone);
@@ -93,3 +101,4 @@ if (count($documentos) > 0) {
 } else {
     echo "No hay documentos por vencer en los próximos 10 días.";
 }
+?>
