@@ -32,8 +32,8 @@ if (count($documentos) > 0) {
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com'; // Servidor SMTP de Gmail
         $mail->SMTPAuth = true;
-        $mail->Username = 'aristides600@gmail.com'; // Tu correo de Gmail
-        $mail->Password = 'zslzncoswbcbzqae'; // Tu contraseña de aplicación
+        $mail->Username = 'infointegralsistemas@gmail.com'; // Tu correo de Gmail
+        $mail->Password = 'uvmuwpldtihytwol'; // Tu contraseña de aplicación
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Encriptación STARTTLS
         $mail->Port = 587; // Puerto SMTP para STARTTLS
 
@@ -47,7 +47,7 @@ if (count($documentos) > 0) {
         );
 
         // Configuración del remitente
-        $mail->setFrom('aristides600@gmail.com', 'InfoSys');
+        $mail->setFrom('infointegralsistemas@gmail.com', 'InfoSys');
 
         // Lista de correos destinatarios
         $correos = [

@@ -33,14 +33,14 @@ try {
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com'; // Servidor SMTP de Gmail
     $mail->SMTPAuth = true;
-    $mail->Username = 'aristides600@gmail.com'; // Tu correo de Gmail
-    $mail->Password = 'zslzncoswbcbzqae'; // Contraseña de aplicación (considera almacenarla de forma segura)
+    $mail->Username = 'infointegralsistemas@gmail.com'; // Tu correo de Gmail
+    $mail->Password = 'uvmuwpldtihytwol'; // Contraseña de aplicación (considera almacenarla de forma segura)
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS; // Encriptación STARTTLS
     $mail->Port = 587; // Puerto SMTP para STARTTLS
 
     // Destinatarios
-    $mail->setFrom('aristides600@gmail.com', 'InfoSys');
-    $mail->addAddress('aristides600@hotmail.com'); // Correo destinatario
+    $mail->setFrom('infointegralsistemas@gmail.com', 'InfoSys');
+    $mail->addAddress('infointegralsistemas@gmail.com'); // Correo destinatario
 
     // Archivos adjuntos
     if (file_exists($backupFilePath)) {
