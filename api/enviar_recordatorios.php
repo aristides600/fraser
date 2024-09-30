@@ -51,8 +51,10 @@ if (count($documentos) > 0) {
 
         // Lista de correos destinatarios
         $correos = [
-            'aristides600@hotmail.com',
-            'aristides600@gmail.com'
+            'cargasrg@fraser.com.ar',
+            'inforg@fraser.com.ar',
+            'oficinasrg@fraser.com.ar',
+            'infointegralsistemas@gmail.com'
         ];
 
         // Recorrer documentos y enviar correos
